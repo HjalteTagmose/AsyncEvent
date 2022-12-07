@@ -1459,9 +1459,13 @@ MonoBehaviour:
   testEvent:
     type: 0
     calls:
+    - obj: {fileID: 1540793871}
+      component: {fileID: 1540793872}
+      method: TestVoid3
+      isAsync: 0
     - obj: {fileID: 1013794233}
-      component: {fileID: 1013794235}
-      method: StopAllCoroutines
+      component: {fileID: 0}
+      method: SetActive
       isAsync: 0
     - obj: {fileID: 1517605029}
       component: {fileID: 1517605030}
@@ -1814,7 +1818,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baef1813e2d1581479536edaaa0c629b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  publicVar: 
+  publicVar: dasd
 --- !u!4 &1540793873
 Transform:
   m_ObjectHideFlags: 0

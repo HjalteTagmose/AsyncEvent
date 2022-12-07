@@ -8,6 +8,8 @@ public class Test : MonoBehaviour
     public string publicVar;
     private string privateVar;
 
-    public void TestVoid() { }
     public async Task TestTask() { }
+    public void TestVoid() { }
+    public void TestVoid2(Transform t) { }
+    public void TestVoid3(string s) { }
 }

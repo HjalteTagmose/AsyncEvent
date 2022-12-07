@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Reflection;
+using System.ComponentModel;
+using Component = UnityEngine.Component;
+using Unity.VisualScripting;
 
 namespace AsyncEvent
 {
@@ -116,18 +119,32 @@ namespace AsyncEvent
 		{
 			methods = new List<MethodInfo>();
 			var comps = obj.GetComponents<Component>();
-            var flags = BindingFlags.Public | BindingFlags.Instance;
+            var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+            var attr  = typeof(EditorBrowsableAttribute);
 
-			// Add all methods
-			methods.AddRange(typeof(GameObject).GetMethods(flags));
+            // Add all methods
+            methods.AddRange(typeof(GameObject).GetMethods(flags));
             foreach (var comp in comps)
 				methods.AddRange(comp.GetType().GetMethods(flags));
 
 			// Filter methods
-			methods = methods.Where(m =>
-				m.GetParameters().Length == 0 && (
+            methods = methods.Where(m =>
 				m.ReturnType == typeof(void) || 
-				m.ReturnType == typeof(Task))).ToList();
+				m.ReturnType == typeof(Task))
+							.Where(m =>
+                !m.HasAttribute(attr) ||
+				m.GetCustomAttribute(attr).Match(EditorBrowsableState.Always))
+							.Where(m =>
+                m.GetParameters().Length <= 1)
+							.Where(m => m.GetParameters().Length > 0 ?
+                m.GetParameters()[0].ParameterType == typeof(string)||
+                m.GetParameters()[0].ParameterType == typeof(float)	||
+                m.GetParameters()[0].ParameterType == typeof(int)	||
+                m.GetParameters()[0].ParameterType == typeof(bool)	||
+                m.GetParameters()[0].ParameterType.IsSubclassOf(typeof(Component)) ||
+                m.GetParameters()[0].ParameterType.IsSubclassOf(typeof(GameObject)) 
+				: true)
+							.ToList();
 
 			// Add 'None'
 			methods = methods.Prepend(null).ToList();
