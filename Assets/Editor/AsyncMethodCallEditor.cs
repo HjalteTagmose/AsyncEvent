@@ -34,32 +34,40 @@ namespace AsyncEvent
 			position.width *= 2f;
 			position.width -= 10;
 
-			//need type
+			// Stop if there is no object
 			if (objProp.objectReferenceValue == null)
 			{
 				EditorGUI.EndProperty();
 				return;
 			}
 
+			// Get object and methods
 			var objValue = (GameObject)objProp.objectReferenceValue;
 			if (!gotMethods)
 				GetMethods(objValue);
 
-			if (compProp.objectReferenceValue == null)
-				idx = old = 0;
-			else
-				idx = old = methods.FindIndex(m =>
-					m.ReflectedType == compProp.objectReferenceValue.GetType() &&
-					m.Name == methodProp.stringValue);
+			// Find idx
+			idx = old = GetIndex();
 
+			// Dropdown
 			var options = methods.Select(m => GetFormattedName(m)).ToArray();
 			idx = EditorGUI.Popup(position, idx, options);
 
+			// If picked new option, update call
 			if (idx != old)
 			{
 				Component component = null;
                 var selected = methods[idx];
-				
+                old = idx;
+
+				if (selected == null)
+                {
+					methodProp.stringValue = "None";
+                    compProp.objectReferenceValue = null;
+                    EditorGUI.EndProperty();
+					return;
+				}
+
 				bool isObj   = selected.ReflectedType == typeof(GameObject);
 				bool hasComp = !isObj && objValue.TryGetComponent(selected.ReflectedType, out component);
 
@@ -75,11 +83,28 @@ namespace AsyncEvent
 					methodProp.stringValue = selected.Name;
 					isAsyncProp.boolValue = false;
 				}
-
-				old = idx;
 			}
 
 			EditorGUI.EndProperty();
+
+			int GetIndex()
+            {
+				for (int i = 1; i < methods.Count; i++)
+				{
+					var m = methods[i];
+					if (m.Name == methodProp.stringValue)
+					{
+                        bool isObj = m.ReflectedType == typeof(GameObject);
+						bool hasComp = compProp.objectReferenceValue != null;
+						bool isThisComp = hasComp && m.ReflectedType == compProp.objectReferenceValue.GetType();
+
+                        if (isObj && !hasComp) return i;
+						if (isThisComp)		   return i;
+                    }
+                }
+
+				return 0;
+			}
 		}
 
 		public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
@@ -105,7 +130,7 @@ namespace AsyncEvent
 				m.ReturnType == typeof(Task))).ToList();
 
 			// Add 'None'
-			methods.Prepend(null);
+			methods = methods.Prepend(null).ToList();
 			gotMethods = true;
 		}
 
