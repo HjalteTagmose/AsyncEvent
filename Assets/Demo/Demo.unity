@@ -1465,7 +1465,7 @@ MonoBehaviour:
       isAsync: 0
     - obj: {fileID: 1013794233}
       component: {fileID: 0}
-      method: SetActive
+      method: set_tag
       isAsync: 0
     - obj: {fileID: 1517605029}
       component: {fileID: 1517605030}

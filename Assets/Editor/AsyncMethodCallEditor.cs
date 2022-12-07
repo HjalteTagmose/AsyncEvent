@@ -13,7 +13,6 @@ namespace AsyncEvent
 	[CustomPropertyDrawer(typeof(AsyncMethodCall))]
 	public class AsyncMethodCallEditor : PropertyDrawer
 	{
-		private bool gotMethods = false;
 		private List<MethodInfo> methods;
 		private int idx = 0, old = 0;
 
@@ -24,18 +23,19 @@ namespace AsyncEvent
 			var methodProp = property.FindPropertyRelative("method");
 			var isAsyncProp = property.FindPropertyRelative("isAsync");
 
+			float width = position.width;
 			label = EditorGUI.BeginProperty(position, label, property);
 
 			position = EditorGUI.PrefixLabel(position, label);
 			position.height = 18f;
-			position.width /= 3f;
+			position.width = width * 0.3f;
 
 			EditorGUI.indentLevel = 0;
 			EditorGUI.PropertyField(position, objProp, GUIContent.none);
 
 			position.x += position.width + 5;
-			position.width *= 2f;
-			position.width -= 10;
+			position.width = width * 0.7f;
+			position.width -= 8;
 
 			// Stop if there is no object
 			if (objProp.objectReferenceValue == null)
@@ -46,8 +46,7 @@ namespace AsyncEvent
 
 			// Get object and methods
 			var objValue = (GameObject)objProp.objectReferenceValue;
-			if (!gotMethods)
-				GetMethods(objValue);
+			GetMethods(objValue);
 
 			// Find idx
 			idx = old = GetIndex();
@@ -148,7 +147,6 @@ namespace AsyncEvent
 
 			// Add 'None'
 			methods = methods.Prepend(null).ToList();
-			gotMethods = true;
 		}
 
 		private string GetFormattedName(MethodInfo m)
@@ -157,67 +155,4 @@ namespace AsyncEvent
 			return $"{(m.ReturnType == typeof(Task) ? "async" : "sync")}: {m.ReflectedType.Name}/{m.Name}";
 		}
     }
-
-
-
-	/*
-	if (objValue != null)
-	{
-		var compValue = (Component)compProp.objectReferenceValue;
-		if (compValue != null)
-		{
-			string pre = compValue.GetType().ToString();
-			string methodValue = methodProp.stringValue;
-			var methods = AsyncMethodCall.GetMethodsOfComponent(compValue);
-
-			var syncMethods = methods.Where(m => m.ReturnType == typeof(void));
-			var asyncMethods= methods.Where(m => m.ReturnType == typeof(Task));
-
-			var methodNames = syncMethods.Select(m => m.Name)
-										 .Concat(asyncMethods
-											.Select(m => m.Name))
-										 .ToArray();
-			string[] options= syncMethods.Select(m => $"{pre}/{m.Name} (sync)")
-										 .Concat(asyncMethods
-											 .Select(m => $"{pre}/{m.Name} (async)"))
-										 .Prepend(pre + ".<None>")
-										 .Append("Choose Component")
-										 .ToArray();
-
-			int midx = Array.IndexOf(methodNames, methodValue);
-			int idx  = midx < 0 ? 0 : midx+1;
-
-			idx = EditorGUI.Popup(position, idx, options);
-			midx = idx-1;
-
-			isAsyncProp.boolValue = options[idx].Contains("async");
-
-			if (midx >= methodNames.Length) compProp.objectReferenceValue = null;
-			else if (midx >= 0)				methodProp.stringValue = methodNames[midx];
-			else							methodProp.stringValue = null;
-		}
-		else
-		{
-			var comps = objValue.GetComponents<Component>();
-			string[] options = comps.Select(c => c.GetType().ToString())
-									.Prepend("None")
-									.ToArray();
-
-			int idx = Array.IndexOf(comps, compValue);
-			if (idx < 0) idx = 0;
-
-			idx = EditorGUI.Popup(position, idx, options);
-			if (idx > 0) compProp.objectReferenceValue = comps[idx-1];
-
-			methodProp.stringValue = null;
-		}
-	}
-	else
-	{
-		compProp.objectReferenceValue = null;
-		methodProp.stringValue = null;
-	}
-
-	EditorGUI.EndProperty();
-	*/
 }
