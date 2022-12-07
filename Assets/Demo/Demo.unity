@@ -1460,13 +1460,13 @@ MonoBehaviour:
     type: 0
     calls:
     - obj: {fileID: 1013794233}
-      component: {fileID: 0}
-      method: None
+      component: {fileID: 1013794235}
+      method: StopAllCoroutines
       isAsync: 0
     - obj: {fileID: 1517605029}
-      component: {fileID: 23583232}
-      method: ForceUpdateRectTransforms
-      isAsync: 0
+      component: {fileID: 1517605030}
+      method: MyTask
+      isAsync: 1
     - obj: {fileID: 1459128551}
       component: {fileID: 1637664240}
       method: MyTask
@@ -1478,8 +1478,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1013794235}
-        m_TargetAssemblyTypeName: AsyncEvent.Demo.DemoTask, Assembly-CSharp
-        m_MethodName: Reset
+        m_TargetAssemblyTypeName: UnityEngine.MonoBehaviour, UnityEngine
+        m_MethodName: CancelInvoke
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1774,6 +1774,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2483738896335182634, guid: 8221075a28edb5140a2a82fe76f717b0, type: 3}
   m_PrefabInstance: {fileID: 23583231}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1517605030 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -5226234196104779083, guid: 8221075a28edb5140a2a82fe76f717b0, type: 3}
+  m_PrefabInstance: {fileID: 23583231}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1517605029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e0c32cfdacbd424587c8b7b6f65fdc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1540793871
 GameObject:
   m_ObjectHideFlags: 0

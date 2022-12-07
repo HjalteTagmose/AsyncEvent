@@ -19,6 +19,7 @@ namespace AsyncEvent.Demo
 
         private async void Start()
         {
+            unityEvent.Invoke();//test
             SetCallType(0);
             await RunDemo();
         }
