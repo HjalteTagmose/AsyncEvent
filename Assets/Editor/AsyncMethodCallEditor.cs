@@ -133,6 +133,7 @@ namespace AsyncEvent
 
 			// Filter methods
             methods = methods.Where(m => MethodFilter(m)).ToList();
+			methods = methods.OrderBy(m => m.Name, new CustomComparer()).ToList();
 
 			// Add 'None'
 			methods = methods.Prepend(null).ToList();
@@ -172,8 +173,42 @@ namespace AsyncEvent
 
 		private string GetFormattedName(MethodInfo m)
 		{
-			if (m == null) return "None";
-			return $"{(m.ReturnType == typeof(Task) ? "async" : "sync")}: {m.ReflectedType.Name}/{m.Name}";
+			if (m == null) 
+				return "None";
+			
+			string newName = $"{(m.ReturnType == typeof(Task) ? "async" : "sync")}: {m.ReflectedType.Name}/{m.Name}";
+			string paramType = "";
+
+            if (m.GetParameters().Length > 0)
+                paramType = m.GetParameters()[0].ParameterType.Name;
+
+            switch (paramType.ToLower())
+            {
+                case "int32": paramType = "int"; break;
+                case "boolean": paramType = "bool"; break;
+                case "string": paramType = "string"; break;
+                case "single": paramType = "float"; break;
+            }
+
+            if (newName.Contains("set_"))
+				newName = newName.Replace("set_", $"{paramType} ");
+			else
+				newName = $"{newName} ({paramType})";
+
+			return newName;
 		}
+
+        public class CustomComparer : IComparer<string>
+        {
+            public int Compare(string x, string y)
+            {
+                if (x.StartsWith("set_") && !y.StartsWith("set_"))
+                    return -1;
+                else if (!x.StartsWith("set_") && y.StartsWith("set_"))
+                    return 1;
+                else
+                    return x.CompareTo(y);
+            }
+        }
     }
 }

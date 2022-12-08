@@ -21,7 +21,8 @@ namespace AsyncEvent
             MethodInfo methodInfo = type.GetMethod(method);
 
             Debug.Log("start invoke: " + method);
-            if (method == "None") { }
+            if (method == "None") 
+            { }
             else if (!isAsync)
             {
                 methodInfo.Invoke(isObj ? obj : component, new object[0]);
