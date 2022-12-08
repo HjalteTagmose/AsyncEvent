@@ -19,11 +19,11 @@ namespace AsyncEvent
 
 		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 		{
-			var objProp = property.FindPropertyRelative("obj");
-			var compProp = property.FindPropertyRelative("component");
-			var methodProp = property.FindPropertyRelative("method");
+			var objProp		= property.FindPropertyRelative("obj");
+			var compProp	= property.FindPropertyRelative("component");
+			var methodProp	= property.FindPropertyRelative("method");
             var isAsyncProp = property.FindPropertyRelative("isAsync");
-            var paramProp = property.FindPropertyRelative("param");
+            //var paramProp	= property.FindPropertyRelative("param"); //this is null, why?!
 
             float width = position.width;
 			label = EditorGUI.BeginProperty(position, label, property);
@@ -56,6 +56,14 @@ namespace AsyncEvent
 			// Dropdown
 			var options = methods.Select(m => GetFormattedName(m)).ToArray();
 			idx = EditorGUI.Popup(position, idx, options);
+
+			// Params
+			if (HasParams())
+            {
+				//this doesnt extend size of actual item?
+				position.y += 20; 
+				//paramProp.managedReferenceValue = EditorGUI.FloatField(position, 0); 
+            }
 
 			// If picked new option, update call
 			if (idx != old)
@@ -113,7 +121,7 @@ namespace AsyncEvent
 
 		public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
 		{
-			return 18f;
+			return HasParams() ? 36f : 18f;
 		}
 
 		private void GetMethods(GameObject obj)
@@ -203,6 +211,11 @@ namespace AsyncEvent
 				newName = $"{newName} ({paramType})";
 
 			return newName;
+		}
+
+		private bool HasParams()
+		{
+			return methods[idx].GetParameters().Length > 0;
 		}
 
         public class CustomComparer : IComparer<string>
