@@ -146,8 +146,14 @@ namespace AsyncEvent
 				// Method is void or task
 				result &= m.ReturnType == typeof(void) || m.ReturnType == typeof(Task);
 
-				// Method is public or serialized
-				result &= m.IsPublic || m.HasAttribute(serialAttr);
+				if (m.Name.Contains("set_"))
+				{
+					var propInfo = m.DeclaringType.GetProperty(m.Name.Replace("set_", ""));
+					result &= !propInfo.HasAttribute(obsoleAttr);
+				}
+
+                // Method is public or serialized
+                result &= m.IsPublic || m.HasAttribute(serialAttr);
 
 				// Method is not obsolete
 				result &= !m.HasAttribute(obsoleAttr);

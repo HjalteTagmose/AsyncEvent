@@ -1459,7 +1459,7 @@ MonoBehaviour:
   testEvent:
     type: 0
     calls:
-    - obj: {fileID: 1013794233}
+    - obj: {fileID: 1540793871}
       component: {fileID: 1540793872}
       method: TestVoid3
       isAsync: 0
@@ -1493,10 +1493,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1540793872}
-        m_TargetAssemblyTypeName: Test, Assembly-CSharp
-        m_MethodName: TestVoid
-        m_Mode: 1
+      - m_Target: {fileID: 1540793871}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: set_isStatic
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
