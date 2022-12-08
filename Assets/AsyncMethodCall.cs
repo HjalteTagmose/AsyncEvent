@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace AsyncEvent
@@ -34,17 +33,5 @@ namespace AsyncEvent
             }
             Debug.Log("end invoke: " + method);
         }
-
-        //public static IEnumerable<MethodInfo> GetMethodsOfComponent(Component component)
-        //{
-        //    //Get methods
-        //    Type type = component.GetType();
-        //    MethodInfo[] methods = type.GetMethods(BindingFlags.Public);
-
-        //    //var methodNames = methods.Where(m => m.IsPublic && 
-        //    //                                m.ReturnType == typeof(Task))
-        //    //                         .Select(m => m.Name);
-        //    return methods.Where(m => m.IsPublic);
-        //}
     }
 }

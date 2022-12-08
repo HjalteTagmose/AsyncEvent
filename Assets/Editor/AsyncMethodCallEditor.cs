@@ -7,6 +7,7 @@ using System.Reflection;
 using System.ComponentModel;
 using Component = UnityEngine.Component;
 using Unity.VisualScripting;
+using System;
 
 namespace AsyncEvent
 {
@@ -118,8 +119,12 @@ namespace AsyncEvent
 		{
 			methods = new List<MethodInfo>();
 			var comps = obj.GetComponents<Component>();
-            var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
-            var attr  = typeof(EditorBrowsableAttribute);
+            var flags = BindingFlags.Public | BindingFlags.Instance;
+			
+			// attributes
+            var editorAttr = typeof(EditorBrowsableAttribute);
+            var serialAttr = typeof(SerializeField);
+            var obsoleAttr = typeof(ObsoleteAttribute);
 
             // Add all methods
             methods.AddRange(typeof(GameObject).GetMethods(flags));
@@ -127,26 +132,42 @@ namespace AsyncEvent
 				methods.AddRange(comp.GetType().GetMethods(flags));
 
 			// Filter methods
-            methods = methods.Where(m =>
-				m.ReturnType == typeof(void) || 
-				m.ReturnType == typeof(Task))
-							.Where(m =>
-                !m.HasAttribute(attr) ||
-				m.GetCustomAttribute(attr).Match(EditorBrowsableState.Always))
-							.Where(m =>
-                m.GetParameters().Length <= 1)
-							.Where(m => m.GetParameters().Length > 0 ?
-                m.GetParameters()[0].ParameterType == typeof(string)||
-                m.GetParameters()[0].ParameterType == typeof(float)	||
-                m.GetParameters()[0].ParameterType == typeof(int)	||
-                m.GetParameters()[0].ParameterType == typeof(bool)	||
-                m.GetParameters()[0].ParameterType.IsSubclassOf(typeof(Component)) ||
-                m.GetParameters()[0].ParameterType.IsSubclassOf(typeof(GameObject)) 
-				: true)
-							.ToList();
+            methods = methods.Where(m => MethodFilter(m)).ToList();
 
 			// Add 'None'
 			methods = methods.Prepend(null).ToList();
+
+			bool MethodFilter(MethodInfo m)
+			{
+				int paramLen = m.GetParameters().Length;
+				bool result = true;
+
+				// Method is void or task
+				result &= m.ReturnType == typeof(void) || m.ReturnType == typeof(Task);
+
+				// Method is public or serialized
+				result &= m.IsPublic || m.HasAttribute(serialAttr);
+
+				// Method is not obsolete
+				result &= !m.HasAttribute(obsoleAttr);
+
+				// Method either has no EditorBrowsable attribute or is Always browsable
+				result &= !m.HasAttribute(editorAttr) || m.GetCustomAttribute(editorAttr).Match(EditorBrowsableState.Always);
+
+				// Method has 0 or 1 parameters
+				result &= paramLen <= 1;
+
+				// If method has parameters, they should be of these types
+				result &= paramLen == 0 ? true :
+					m.GetParameters()[0].ParameterType == typeof(string) ||
+					m.GetParameters()[0].ParameterType == typeof(float) ||
+					m.GetParameters()[0].ParameterType == typeof(int) ||
+					m.GetParameters()[0].ParameterType == typeof(bool) ||
+					m.GetParameters()[0].ParameterType.IsSubclassOf(typeof(Component)) ||
+					m.GetParameters()[0].ParameterType.IsSubclassOf(typeof(GameObject));
+
+				return result;
+			}	
 		}
 
 		private string GetFormattedName(MethodInfo m)
