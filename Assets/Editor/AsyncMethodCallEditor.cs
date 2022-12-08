@@ -22,9 +22,10 @@ namespace AsyncEvent
 			var objProp = property.FindPropertyRelative("obj");
 			var compProp = property.FindPropertyRelative("component");
 			var methodProp = property.FindPropertyRelative("method");
-			var isAsyncProp = property.FindPropertyRelative("isAsync");
+            var isAsyncProp = property.FindPropertyRelative("isAsync");
+            var paramProp = property.FindPropertyRelative("param");
 
-			float width = position.width;
+            float width = position.width;
 			label = EditorGUI.BeginProperty(position, label, property);
 
 			position = EditorGUI.PrefixLabel(position, label);

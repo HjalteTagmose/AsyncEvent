@@ -1459,14 +1459,10 @@ MonoBehaviour:
   testEvent:
     type: 0
     calls:
-    - obj: {fileID: 1540793871}
-      component: {fileID: 1540793872}
-      method: TestVoid3
-      isAsync: 0
     - obj: {fileID: 1013794233}
-      component: {fileID: 0}
-      method: set_active
-      isAsync: 0
+      component: {fileID: 1013794235}
+      method: MyTask
+      isAsync: 1
     - obj: {fileID: 1517605029}
       component: {fileID: 1517605030}
       method: MyTask
