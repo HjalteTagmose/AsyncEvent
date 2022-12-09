@@ -1471,6 +1471,10 @@ MonoBehaviour:
       component: {fileID: 1637664240}
       method: MyTask
       isAsync: 1
+    - obj: {fileID: 1540793871}
+      component: {fileID: 0}
+      method: SetActive
+      isAsync: 0
   restartButton: {fileID: 916064331}
   tipText: {fileID: 2024790614}
   runText: {fileID: 1379654466}

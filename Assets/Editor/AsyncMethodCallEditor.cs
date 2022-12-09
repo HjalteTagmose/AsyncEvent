@@ -19,25 +19,22 @@ namespace AsyncEvent
 
 		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 		{
+			// Properties
 			var objProp		= property.FindPropertyRelative("obj");
 			var compProp	= property.FindPropertyRelative("component");
 			var methodProp	= property.FindPropertyRelative("method");
             var isAsyncProp = property.FindPropertyRelative("isAsync");
-            //var paramProp	= property.FindPropertyRelative("param"); //this is null, why?!
 
-            float width = position.width;
+			// Label
+			float width = position.width;
 			label = EditorGUI.BeginProperty(position, label, property);
-
 			position = EditorGUI.PrefixLabel(position, label);
+			
+			// Object field
 			position.height = 18f;
 			position.width = width * 0.3f;
-
 			EditorGUI.indentLevel = 0;
 			EditorGUI.PropertyField(position, objProp, GUIContent.none);
-
-			position.x += position.width + 5;
-			position.width = width * 0.7f;
-			position.width -= 8;
 
 			// Stop if there is no object
 			if (objProp.objectReferenceValue == null)
@@ -46,24 +43,25 @@ namespace AsyncEvent
 				return;
 			}
 
-			// Get object and methods
+			// Get object, methods & options
 			var objValue = (GameObject)objProp.objectReferenceValue;
 			GetMethods(objValue);
+            var options = methods.Select(m => GetFormattedName(m)).ToArray();
 
 			// Find idx
 			idx = old = GetIndex();
 
-			// Dropdown
-			var options = methods.Select(m => GetFormattedName(m)).ToArray();
+            // Dropdown
+            position.x += position.width + 5;
+            position.width = width * 0.7f;
+            position.width -= 8;
 			idx = EditorGUI.Popup(position, idx, options);
 
 			// Params
 			if (HasParams())
             {
-				//this doesnt extend size of actual item?
-				position.y += 20; 
-				//paramProp.managedReferenceValue = EditorGUI.FloatField(position, 0); 
-            }
+				position.y += 20; //this doesnt extend size of actual item?
+			}
 
 			// If picked new option, update call
 			if (idx != old)
