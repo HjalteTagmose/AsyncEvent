@@ -13,7 +13,7 @@ namespace AsyncEvent.Editor
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             // Properties
-            var callsProp = property.FindPropertyRelative("calls");
+            var callsProp    = property.FindPropertyRelative("calls");
             var callTypeProp = property.FindPropertyRelative("type");
 
             // Initialize

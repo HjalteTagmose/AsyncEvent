@@ -24,7 +24,8 @@ namespace AsyncEvent
 			var compProp	= property.FindPropertyRelative("component");
 			var methodProp	= property.FindPropertyRelative("method");
             var isAsyncProp = property.FindPropertyRelative("isAsync");
-
+			var paramProp   = property.FindPropertyRelative("param");
+		
 			// Label
 			float width = position.width;
 			label = EditorGUI.BeginProperty(position, label, property);
@@ -57,14 +58,8 @@ namespace AsyncEvent
             position.width -= 8;
 			idx = EditorGUI.Popup(position, idx, options);
 
-			// Params
-			if (HasParams())
-            {
-				position.y += 20; //this doesnt extend size of actual item?
-			}
-
-			// If picked new option, update call
-			if (idx != old)
+            // If picked new option, update call
+            if (idx != old)
 			{
 				Component component = null;
                 var selected = methods[idx];
@@ -93,6 +88,13 @@ namespace AsyncEvent
 					methodProp.stringValue = selected.Name;
 					isAsyncProp.boolValue = false;
 				}
+			}
+
+			// Params
+			if (HasParams())
+			{
+                position.y += 20; //this doesnt extend size of actual item?
+				EditorGUI.PropertyField(position, paramProp);
 			}
 
 			EditorGUI.EndProperty();
@@ -215,7 +217,7 @@ namespace AsyncEvent
 		{
 			return methods[idx].GetParameters().Length > 0;
 		}
-
+        
         public class CustomComparer : IComparer<string>
         {
             public int Compare(string x, string y)

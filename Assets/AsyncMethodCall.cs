@@ -9,21 +9,23 @@ namespace AsyncEvent
     [Serializable]
     public class AsyncMethodCall
     {
-        public GameObject obj;
-        public Component component;
-        public string method = "";
-        public bool isAsync;
-        public object param;
+        [SerializeField] private GameObject obj;
+        [SerializeField] private Component component;
+        [SerializeField] private string method = "";
+        [SerializeField] private bool isAsync;
+        [SerializeField] private Parameter param = new Parameter();
 
         public async Task Invoke()
         {
             bool isObj = component == null;
             Type type = isObj ? typeof(GameObject) : component.GetType();
             MethodInfo methodInfo = type.GetMethod(method);
-            ParameterInfo[] parameters = methodInfo.GetParameters();
 
-            object[] p = new object[parameters.Length];
-            if (p.Length > 0) p[0] = param;
+            // Create params
+            int paramCount = methodInfo.GetParameters().Length;
+            object[] p = new object[0];
+            if (paramCount > 0)
+                p = new object[] { param };
 
             Debug.Log("start invoke: " + method);
             if (method == "None") 
