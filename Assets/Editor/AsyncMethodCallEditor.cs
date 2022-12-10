@@ -20,14 +20,19 @@ namespace AsyncEvent
 		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 		{
 			// Properties
-			var objProp		= property.FindPropertyRelative("obj");
-			var compProp	= property.FindPropertyRelative("component");
-			var methodProp	= property.FindPropertyRelative("method");
-            var isAsyncProp = property.FindPropertyRelative("isAsync");
-			var paramProp   = property.FindPropertyRelative("param");
-		
-			// Label
-			float width = position.width;
+			var objProp		  = property.FindPropertyRelative("obj");
+			var compProp	  = property.FindPropertyRelative("component");
+			var methodProp	  = property.FindPropertyRelative("method");
+            var isAsyncProp	  = property.FindPropertyRelative("isAsync");
+            var paramJsonProp = property.FindPropertyRelative("paramJson");
+            var paramTypeProp = property.FindPropertyRelative("paramType");
+
+			// Parameter tests
+            var paramProp = property.FindPropertyRelative("param");
+			var testJson = paramProp.FindPropertyRelative("json");
+
+            // Label
+            float width = position.width;
 			label = EditorGUI.BeginProperty(position, label, property);
 			position = EditorGUI.PrefixLabel(position, label);
 			
@@ -61,6 +66,9 @@ namespace AsyncEvent
             // If picked new option, update call
             if (idx != old)
 			{
+				paramTypeProp.stringValue = "";
+				paramJsonProp.stringValue = "";
+
 				Component component = null;
                 var selected = methods[idx];
                 old = idx;
@@ -94,10 +102,27 @@ namespace AsyncEvent
 			if (HasParams())
 			{
                 position.y += 20; //this doesnt extend size of actual item?
-				EditorGUI.PropertyField(position, paramProp);
-			}
+				string paramType = methods[idx].GetParameters()[0].ParameterType.ToString();
+				if (paramTypeProp.stringValue != paramType)
+				{
+					paramTypeProp.stringValue = paramType;
+					paramJsonProp.stringValue = GetDefaultValueJson(paramType);
+                }
 
-			EditorGUI.EndProperty();
+                string json = paramJsonProp.stringValue;
+				string type = paramTypeProp.stringValue;
+                object value = JsonUtility.FromJson(json, Type.GetType(type));
+
+				value = ShowParamGUI(position, value);
+				json = EditorJsonUtility.ToJson(value);
+
+				if (value is string && !string.IsNullOrEmpty((string)value))
+					Debug.Break();
+
+				paramJsonProp.stringValue = EditorJsonUtility.ToJson(value);
+            }
+
+            EditorGUI.EndProperty();
 
 			int GetIndex()
             {
@@ -119,7 +144,22 @@ namespace AsyncEvent
 			}
 		}
 
-		public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        private string GetDefaultValueJson(string paramType)
+        {
+			object instance = null;
+            Type t = Type.GetType(paramType);
+			switch (paramType.ToLower())
+            {
+                case "system.string":	instance = "";	  break;
+                case "int":		instance = 0;	  break;
+                case "float":	instance = 0;	  break;
+                case "bool":	instance = false; break;
+                default: instance = Activator.CreateInstance(t); break;
+			}
+            return EditorJsonUtility.ToJson(instance);
+        }
+
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
 		{
 			return HasParams() ? 36f : 18f;
 		}
@@ -217,6 +257,25 @@ namespace AsyncEvent
 		{
 			return methods[idx].GetParameters().Length > 0;
 		}
+
+		private object ShowParamGUI(Rect position, object value)
+		{
+            switch (value)
+			{
+                case int i:			value = EditorGUI.IntField(position, "Value", i); break;
+                case float f:		value = EditorGUI.FloatField(position, "Value", f); break;
+                case string s:		value = EditorGUI.TextField(position, "Value", s); break;
+                case bool b:		value = EditorGUI.Toggle(position, "Value", b); break;
+                case GameObject go: value = EditorGUI.ObjectField(position, "Value", go, typeof(GameObject), true); break;
+                case Component c:	value = EditorGUI.ObjectField(position, "Value", c, typeof(Component), true); break;
+                default: EditorGUI.LabelField(position, "Unsupported value type: " + value.GetType()); break;
+            }
+
+			if (value == "test")
+				Debug.Break();
+
+			return value;
+        }
         
         public class CustomComparer : IComparer<string>
         {

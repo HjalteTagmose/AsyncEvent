@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -13,7 +12,9 @@ namespace AsyncEvent
         [SerializeField] private Component component;
         [SerializeField] private string method = "";
         [SerializeField] private bool isAsync;
-        [SerializeField] private Parameter param = new Parameter();
+        [SerializeField] private string paramJson = "";
+        [SerializeField] private string paramType = "";
+        [SerializeField] private Parameter param;
 
         public async Task Invoke()
         {
@@ -22,10 +23,10 @@ namespace AsyncEvent
             MethodInfo methodInfo = type.GetMethod(method);
 
             // Create params
-            int paramCount = methodInfo.GetParameters().Length;
             object[] p = new object[0];
-            if (paramCount > 0)
-                p = new object[] { param };
+            //int paramCount = methodInfo.GetParameters().Length;
+            //if (paramCount > 0)
+            //    p = new object[] { param };
 
             Debug.Log("start invoke: " + method);
             if (method == "None") 

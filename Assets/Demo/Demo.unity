@@ -1456,9 +1456,10 @@ MonoBehaviour:
     calls:
     - obj: {fileID: 1540793871}
       component: {fileID: 0}
-      method: SendMessage
+      method: SendMessageUpwards
       isAsync: 0
-      param: {fileID: 0}
+      paramJson: '{}'
+      paramType: System.String
   restartButton: {fileID: 916064331}
   tipText: {fileID: 2024790614}
   runText: {fileID: 1379654466}
