@@ -1,4 +1,3 @@
-using AsyncEvent.Demo;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -14,5 +13,5 @@ public class Test : MonoBehaviour
     public void TestVoid5(Transform t)  => print(t);
     public void TestVoid6(GameObject go)=> print(go);
     public void TestVoidCOMP(Test t)    => print(t);
-    public void TestVoidCOMP(Demo t)    => print(t);
+    public void TestVoidCOMP(Canvas t)  => print(t);
 }
