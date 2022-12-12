@@ -45,7 +45,8 @@ namespace AsyncEvent.Editor
 
             // Dropdown
             float w = position.width; float y = position.y;
-            position.x += w - 101; position.width = 100; position.y += 1;
+            position.x += w - 101; position.y += 1;
+            position.height = 20; position.width = 100;
             EditorGUI.PropertyField(position, callTypeProp, GUIContent.none);
 
             // Dropdown tip
