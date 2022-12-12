@@ -234,7 +234,7 @@ namespace AsyncEvent.Editor
 			if (m == null) 
 				return "None";
 			
-			string newName = $"{(m.ReturnType == typeof(Task) ? "async" : "sync")}: {m.ReflectedType.Name}/{m.Name}";
+			string newName = $"{m.ReflectedType.Name}/{m.Name}{(m.ReturnType == typeof(Task) ? "*" : "")}";
 			string paramType = "";
 
             if (m.GetParameters().Length > 0)

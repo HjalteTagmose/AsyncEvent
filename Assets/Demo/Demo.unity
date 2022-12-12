@@ -241,6 +241,11 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2483738896335182633, guid: 8221075a28edb5140a2a82fe76f717b0, type: 3}
   m_PrefabInstance: {fileID: 23583231}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &62007442 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2483738896335182634, guid: 8221075a28edb5140a2a82fe76f717b0, type: 3}
+  m_PrefabInstance: {fileID: 1637664238}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &231130659
 GameObject:
   m_ObjectHideFlags: 0
@@ -397,6 +402,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 460547723}
   m_CullTransparentMesh: 1
+--- !u!1 &462953720 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2483738896335182634, guid: 8221075a28edb5140a2a82fe76f717b0, type: 3}
+  m_PrefabInstance: {fileID: 23583231}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &462953721 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -5226234196104779083, guid: 8221075a28edb5140a2a82fe76f717b0, type: 3}
+  m_PrefabInstance: {fileID: 23583231}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 462953720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e0c32cfdacbd424587c8b7b6f65fdc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &508094048
 GameObject:
   m_ObjectHideFlags: 0
@@ -953,6 +974,11 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_IsOn: 1
+--- !u!1 &902894566 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2483738896335182634, guid: 8221075a28edb5140a2a82fe76f717b0, type: 3}
+  m_PrefabInstance: {fileID: 2483738896128302739}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &916064329
 GameObject:
   m_ObjectHideFlags: 0
@@ -1235,6 +1261,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2483738896335182633, guid: 8221075a28edb5140a2a82fe76f717b0, type: 3}
   m_PrefabInstance: {fileID: 2483738896128302739}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1013794235 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -5226234196104779083, guid: 8221075a28edb5140a2a82fe76f717b0, type: 3}
+  m_PrefabInstance: {fileID: 2483738896128302739}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 902894566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e0c32cfdacbd424587c8b7b6f65fdc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1040890289
 GameObject:
   m_ObjectHideFlags: 0
@@ -1441,64 +1478,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   demoEvent:
-    type: 0
+    type: 1
     calls:
-    - obj: {fileID: 1540793871}
-      component: {fileID: 1540793872}
-      isAsync: 0
-      method: TestVoidCOMP
-      paramCount: 1
-      param:
-        intValue: 0
-        boolValue: 0
-        floatValue: 0
-        stringValue: 
-        componentValue: {fileID: 1162919460}
-        gameObjValue: {fileID: 0}
-        typeValue: Demo
-    - obj: {fileID: 1540793871}
-      component: {fileID: 0}
-      isAsync: 0
-      method: set_layer
-      paramCount: 1
-      param:
-        intValue: 1
-        boolValue: 0
-        floatValue: 0
-        stringValue: 
-        componentValue: {fileID: 0}
-        gameObjValue: {fileID: 0}
-        typeValue: Int32
-    - obj: {fileID: 1540793871}
-      component: {fileID: 0}
-      isAsync: 0
-      method: set_name
-      paramCount: 1
-      param:
-        intValue: 0
-        boolValue: 0
-        floatValue: 0
-        stringValue: testsetsetset
-        componentValue: {fileID: 0}
-        gameObjValue: {fileID: 0}
-        typeValue: String
-    - obj: {fileID: 1540793871}
-      component: {fileID: 0}
-      isAsync: 0
-      method: set_tag
-      paramCount: 1
-      param:
-        intValue: 0
-        boolValue: 0
-        floatValue: 0
-        stringValue: Finish
-        componentValue: {fileID: 0}
-        gameObjValue: {fileID: 0}
-        typeValue: String
-    - obj: {fileID: 1540793871}
-      component: {fileID: 1540793872}
+    - obj: {fileID: 902894566}
+      component: {fileID: 1013794235}
       isAsync: 1
-      method: TestTask
+      method: MyTask
       paramCount: 0
       param:
         intValue: 0
@@ -1508,58 +1493,32 @@ MonoBehaviour:
         componentValue: {fileID: 0}
         gameObjValue: {fileID: 0}
         typeValue: 
-    - obj: {fileID: 1540793871}
-      component: {fileID: 0}
-      isAsync: 0
-      method: set_isStatic
-      paramCount: 1
-      param:
-        intValue: 0
-        boolValue: 1
-        floatValue: 0
-        stringValue: 
-        componentValue: {fileID: 0}
-        gameObjValue: {fileID: 0}
-        typeValue: Boolean
-    - obj: {fileID: 1540793871}
-      component: {fileID: 1540793873}
-      isAsync: 0
-      method: set_name
-      paramCount: 1
-      param:
-        intValue: 0
-        boolValue: 0
-        floatValue: 0
-        stringValue: lelelelel
-        componentValue: {fileID: 0}
-        gameObjValue: {fileID: 0}
-        typeValue: String
-    - obj: {fileID: 1540793871}
-      component: {fileID: 1540793873}
-      isAsync: 0
-      method: set_parent
-      paramCount: 1
+    - obj: {fileID: 462953720}
+      component: {fileID: 462953721}
+      isAsync: 1
+      method: MyTask
+      paramCount: 0
       param:
         intValue: 0
         boolValue: 0
         floatValue: 0
         stringValue: 
-        componentValue: {fileID: 918038643}
+        componentValue: {fileID: 0}
         gameObjValue: {fileID: 0}
-        typeValue: Transform
-    - obj: {fileID: 1540793871}
-      component: {fileID: 1540793873}
-      isAsync: 0
-      method: set_hierarchyCapacity
-      paramCount: 1
+        typeValue: 
+    - obj: {fileID: 62007442}
+      component: {fileID: 1637664240}
+      isAsync: 1
+      method: MyTask
+      paramCount: 0
       param:
-        intValue: 3
+        intValue: 0
         boolValue: 0
         floatValue: 0
         stringValue: 
         componentValue: {fileID: 0}
         gameObjValue: {fileID: 0}
-        typeValue: Int32
+        typeValue: 
   restartButton: {fileID: 916064331}
   tipText: {fileID: 2024790614}
   runText: {fileID: 1379654466}
@@ -1988,6 +1947,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2483738896335182633, guid: 8221075a28edb5140a2a82fe76f717b0, type: 3}
   m_PrefabInstance: {fileID: 1637664238}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1637664240 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -5226234196104779083, guid: 8221075a28edb5140a2a82fe76f717b0, type: 3}
+  m_PrefabInstance: {fileID: 1637664238}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 62007442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e0c32cfdacbd424587c8b7b6f65fdc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1943845954
 GameObject:
   m_ObjectHideFlags: 0
