@@ -49,7 +49,6 @@ namespace AsyncEvent.Editor
             float w = position.width; float y = position.y;
             position.x += w - 101; position.width = 100; position.y += 1;
             EditorGUI.PropertyField(position, callTypeProp, GUIContent.none);
-            //EditorGUI.EnumPopup(position, (AsyncEventType)callTypeProp.enumValueIndex);
 
             // Dropdown tip
             string tip = "NaN";

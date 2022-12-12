@@ -10,10 +10,12 @@ namespace AsyncEvent
     {
         [SerializeField] private GameObject obj;
         [SerializeField] private Component component;
-        [SerializeField] private string method = "";
         [SerializeField] private bool isAsync;
+        [SerializeField] private string method = "None";
         [SerializeField] private int paramCount;
         [SerializeField] private Parameter param;
+        
+        private bool debugOn = false;
 
         public async Task Invoke()
         {
@@ -24,33 +26,36 @@ namespace AsyncEvent
             }
 
             // Create params
-            object[] ps = new object[paramCount];
-            Type[] ptypes = new Type[paramCount];
+            object[] paramObjs = new object[paramCount];
+            Type[] paramTypes = new Type[paramCount];
             if (paramCount > 0)
             {
                 var val = param.GetValue();
-                ps[0] = val;
-                ptypes[0] = val.GetType();
+                paramObjs[0] = val;
+                paramTypes[0] = val.GetType();
             }
 
             // Create method
             bool isObj = component == null;
-            Type type = isObj ? typeof(GameObject) : component.GetType();
-            MethodInfo methodInfo = type.GetMethod(method, ptypes);
+            object mObj = isObj ? obj : component;
+            Type type = mObj.GetType();
+            MethodInfo methodInfo = type.GetMethod(method, paramTypes);
 
-            Debug.Log("start invoke: " + method);
-            if (method == "None") 
-            { }
-            else if (!isAsync)
+            if (debugOn) 
+                Debug.Log("start invoke: " + method);
+            
+            if (!isAsync)
             {
-                methodInfo.Invoke(isObj ? obj : component, ps);
+                methodInfo.Invoke(mObj, paramObjs);
             }
             else
             {
-                dynamic awaitable = methodInfo.Invoke(component, ps);
+                dynamic awaitable = methodInfo.Invoke(mObj, paramObjs);
                 await awaitable;
             }
-            Debug.Log("end invoke: " + method);
+    
+            if (debugOn)
+                Debug.Log("end invoke: " + method);
         }
     }
 }
