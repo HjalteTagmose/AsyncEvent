@@ -30,13 +30,11 @@ namespace AsyncEvent.Editor
             EditorGUI.BeginProperty(position, label, property);
 
             // List
-            list.drawHeaderCallback =
-                (Rect rect) =>
+            list.drawHeaderCallback = (Rect rect) =>
                 {
                     EditorGUI.LabelField(rect, label);
                 };
-            list.drawElementCallback =
-                (Rect rect, int index, bool isActive, bool isFocused) =>
+            list.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
                 {
                     rect.height += 20;
                     EditorGUIUtility.labelWidth = 1;
@@ -74,17 +72,6 @@ namespace AsyncEvent.Editor
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             return initialized ? list.GetHeight() : 40;
-        }
-
-        public static void DrawUIBox(Color borderColor, Color backgroundColor, Rect rect, RectOffset border)
-        {
-            Rect outer = new Rect(rect);
-            Rect inner = new Rect(rect.x + border.left,
-                                  rect.y + border.top,
-                                  rect.width - (border.left + border.right),
-                                  rect.height - (border.top + border.bottom));
-            EditorGUI.DrawRect(outer, borderColor);
-            EditorGUI.DrawRect(inner, backgroundColor);
         }
     }
 }

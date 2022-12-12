@@ -21,9 +21,9 @@ namespace AsyncEvent
 		{
 			switch (Type)
 			{
-				case AsyncEventType.WaitAll:	 await InvokeWhenAll();	  break;
-				case AsyncEventType.Sequenced:	 await InvokeSequenced(); break;
-				case AsyncEventType.Synchronous: InvokeSync();			  break;
+				case AsyncEventType.WaitAll:   await InvokeWhenAll();	break;
+				case AsyncEventType.Sequenced: await InvokeSequenced(); break;
+				case AsyncEventType.Synchronous:     InvokeSync();		break;
 			}
 		}
 

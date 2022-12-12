@@ -15,10 +15,11 @@ namespace AsyncEvent
         [SerializeField] private int paramCount;
         [SerializeField] private Parameter param;
         
-        private bool debugOn = false;
+        private bool debugOn = true;
 
         public async Task Invoke()
         {
+            // If no method, do nothing
             if (method == "None")
             {
                 Debug.LogWarning("No method specified");
@@ -41,21 +42,11 @@ namespace AsyncEvent
             Type type = mObj.GetType();
             MethodInfo methodInfo = type.GetMethod(method, paramTypes);
 
-            if (debugOn) 
-                Debug.Log("start invoke: " + method);
-            
-            if (!isAsync)
-            {
-                methodInfo.Invoke(mObj, paramObjs);
-            }
-            else
-            {
-                dynamic awaitable = methodInfo.Invoke(mObj, paramObjs);
-                await awaitable;
-            }
-    
-            if (debugOn)
-                Debug.Log("end invoke: " + method);
+            // Invoke it!
+            if (debugOn) Debug.Log("start invoke: " + method);
+            dynamic awaitable = methodInfo.Invoke(mObj, paramObjs);
+            if (isAsync) await awaitable;
+            if (debugOn) Debug.Log("end invoke: " + method);
         }
     }
 }

@@ -1496,6 +1496,19 @@ MonoBehaviour:
         gameObjValue: {fileID: 0}
         typeValue: String
     - obj: {fileID: 1540793871}
+      component: {fileID: 1540793872}
+      isAsync: 1
+      method: TestTask
+      paramCount: 0
+      param:
+        intValue: 0
+        boolValue: 0
+        floatValue: 0
+        stringValue: 
+        componentValue: {fileID: 0}
+        gameObjValue: {fileID: 0}
+        typeValue: 
+    - obj: {fileID: 1540793871}
       component: {fileID: 0}
       isAsync: 0
       method: set_isStatic

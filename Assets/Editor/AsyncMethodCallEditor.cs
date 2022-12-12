@@ -1,41 +1,45 @@
 using UnityEngine;
 using UnityEditor;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Reflection;
-using System.ComponentModel;
-using Component = UnityEngine.Component;
 using Unity.VisualScripting;
 using System;
-using static PlasticPipe.PlasticProtocol.Messages.NegotiationCommand;
+using System.Linq;
+using System.Reflection;
+using System.ComponentModel;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using Component = UnityEngine.Component;
 
-namespace AsyncEvent
+namespace AsyncEvent.Editor
 {
 	[CustomPropertyDrawer(typeof(AsyncMethodCall))]
 	public class AsyncMethodCallEditor : PropertyDrawer
 	{
-		private List<MethodInfo> methods;
 		private int idx = 0, old = 0;
+        private MethodComparer methodComparer;
 
-		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        #region Properties
+        // Properties
+        private SerializedProperty objProp;
+        private SerializedProperty compProp;
+        private SerializedProperty methodProp;
+        private SerializedProperty isAsyncProp;
+        private SerializedProperty paramProp;
+        private SerializedProperty paramCountProp;
+		
+        // Parameter types
+        private SerializedProperty paramIntProp;
+        private SerializedProperty paramFloatProp;
+        private SerializedProperty paramStringProp;
+        private SerializedProperty paramBoolProp;
+        private SerializedProperty paramGameObjProp;
+        private SerializedProperty paramComponentProp;
+        private SerializedProperty paramTypeProp;
+        #endregion
+
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 		{
-			// Properties
-			var objProp				= property.FindPropertyRelative("obj");
-			var compProp			= property.FindPropertyRelative("component");
-			var methodProp			= property.FindPropertyRelative("method");
-            var isAsyncProp			= property.FindPropertyRelative("isAsync");
-            var paramProp			= property.FindPropertyRelative("param");
-            var paramCountProp		= property.FindPropertyRelative("paramCount");
-
-            // Parameter types
-            var paramIntProp		= paramProp.FindPropertyRelative("intValue");
-			var paramFloatProp		= paramProp.FindPropertyRelative("floatValue");
-			var paramStringProp		= paramProp.FindPropertyRelative("stringValue");
-			var paramBoolProp		= paramProp.FindPropertyRelative("boolValue");
-			var paramGameObjProp	= paramProp.FindPropertyRelative("gameObjValue");
-            var paramComponentProp	= paramProp.FindPropertyRelative("componentValue");
-            var paramTypeProp		= paramProp.FindPropertyRelative("typeValue");
+			// Get all properties
+			GetProperties(property);
 
             // Label
             float width = position.width;
@@ -57,7 +61,7 @@ namespace AsyncEvent
 
 			// Get object, methods & options
 			var objValue = (GameObject)objProp.objectReferenceValue;
-			GetMethods(objValue);
+			var methods = GetMethods(objValue);
             var options = methods.Select(m => GetFormattedName(m)).ToArray();
 
 			// Find idx
@@ -72,77 +76,16 @@ namespace AsyncEvent
             // If picked new option, update call
             if (idx != old)
             {
-                Component component = null;
-                var selected = methods[idx];
                 old = idx;
-
-				// Get param info
-                var paramsArr = methods[idx]?.GetParameters();
-                int paramCount = paramsArr == null ? 0 : paramsArr.Length;
-
-                // Reset all param props here
-                paramIntProp.intValue = 0;
-                paramFloatProp.floatValue = 0f;
-                paramStringProp.stringValue = "";
-                paramBoolProp.boolValue = false;
-                paramComponentProp.objectReferenceValue = null;
-                paramGameObjProp.objectReferenceValue = null;
-                paramCountProp.intValue = paramCount;
-                paramTypeProp.stringValue = paramCount > 0 ? paramsArr[0].ParameterType.Name : "";
-
-                if (selected == null)
-                {
-                    methodProp.stringValue = "None";
-                    compProp.objectReferenceValue = null;
-                    EditorGUI.EndProperty();
-                    return;
-                }
-
-				bool isObj   = selected.ReflectedType == typeof(GameObject);
-				bool hasComp = !isObj && objValue.TryGetComponent(selected.ReflectedType, out component);
-
-				if (hasComp)
-				{
-					compProp.objectReferenceValue = component;
-					methodProp.stringValue = selected.Name;
-					isAsyncProp.boolValue = selected.ReturnType == typeof(Task);
-				}
-				else if (isObj)
-				{
-					compProp.objectReferenceValue = null;
-					methodProp.stringValue = selected.Name;
-					isAsyncProp.boolValue = false;
-				}
+				SelectMethod(objValue, methods[idx]);
 			}
 
-			// Params
-			if (HasParams())
+			// Show parameter GUI if there are any
+			if (methods[idx]?.GetParameters().Length > 0)
 			{
                 position.y += 20;
                 Type pType = methods[idx].GetParameters()[0].ParameterType;
 				ShowParamGUI(position, pType);
-
-                /*
-                position.y += 20; //this doesnt extend size of actual item?
-				string paramType = methods[idx].GetParameters()[0].ParameterType.ToString();
-				if (paramTypeProp.stringValue != paramType)
-				{
-					paramTypeProp.stringValue = paramType;
-					paramJsonProp.stringValue = GetDefaultValueJson(paramType);
-                }
-
-                string json = paramJsonProp.stringValue;
-				string type = paramTypeProp.stringValue;
-                object value = JsonUtility.FromJson(json, Type.GetType(type));
-
-				value = ShowParamGUI(position, value);
-				json = EditorJsonUtility.ToJson(value);
-
-				if (value is string && !string.IsNullOrEmpty((string)value))
-					Debug.Break();
-
-				paramJsonProp.stringValue = EditorJsonUtility.ToJson(value);
-				*/
             }
 
             EditorGUI.EndProperty();
@@ -154,6 +97,7 @@ namespace AsyncEvent
 					var m = methods[i];
 					var pCount = m.GetParameters().Length;
 
+                    // same params?
                     if (pCount > 0)
 					{
 						var param = m.GetParameters()[0];
@@ -163,6 +107,7 @@ namespace AsyncEvent
 					else if (paramCountProp.intValue != pCount)
 						continue;
 
+                    // same name?
 					if (m.Name == methodProp.stringValue)
 					{
                         bool isObj = m.ReflectedType == typeof(GameObject);
@@ -176,114 +121,113 @@ namespace AsyncEvent
 
 				return 0;
 			}
+        }
 
-            void ShowParamGUI(Rect position, Type type)
+        #region Methods
+        private void GetProperties(SerializedProperty property)
+        {			
+			// Properties
+			objProp				= property.FindPropertyRelative("obj");
+			compProp			= property.FindPropertyRelative("component");
+			methodProp			= property.FindPropertyRelative("method");
+            isAsyncProp			= property.FindPropertyRelative("isAsync");
+            paramProp			= property.FindPropertyRelative("param");
+            paramCountProp		= property.FindPropertyRelative("paramCount");
+
+            // Parameter types
+            paramIntProp		= paramProp.FindPropertyRelative("intValue");
+			paramFloatProp		= paramProp.FindPropertyRelative("floatValue");
+			paramStringProp		= paramProp.FindPropertyRelative("stringValue");
+			paramBoolProp		= paramProp.FindPropertyRelative("boolValue");
+			paramGameObjProp	= paramProp.FindPropertyRelative("gameObjValue");
+            paramComponentProp	= paramProp.FindPropertyRelative("componentValue");
+            paramTypeProp		= paramProp.FindPropertyRelative("typeValue");
+        }
+
+        private void ShowParamGUI(Rect position, Type type)
+        {
+			if (type.IsSubclassOf(typeof(Component)))
+			{
+				paramComponentProp.objectReferenceValue = EditorGUI.ObjectField(position, "Value", paramComponentProp.objectReferenceValue, type, true); 
+                return;
+			}
+
+            string t = type.Name.ToLower();
+            switch (t)
             {
-				if (type.IsSubclassOf(typeof(Component)))
-				{
-					paramComponentProp.objectReferenceValue = EditorGUI.ObjectField(position, "Value", paramComponentProp.objectReferenceValue, type, true); 
-                    return;
-				}
-
-                string t = type.Name.ToLower();
-                switch (t)
-                {
-                    case "int32":		paramIntProp	  .intValue				= EditorGUI.IntField(	position, "Value", paramIntProp	     .intValue		); break;
-                    case "single":		paramFloatProp	  .floatValue			= EditorGUI.FloatField( position, "Value", paramFloatProp    .floatValue	); break;
-                    case "string":		paramStringProp	  .stringValue		    = EditorGUI.TextField(  position, "Value", paramStringProp   .stringValue	); break;
-                    case "boolean":		paramBoolProp	  .boolValue			= EditorGUI.Toggle(		position, "Value", paramBoolProp	 .boolValue		); break;
-                    case "gameobject":	paramGameObjProp  .objectReferenceValue = EditorGUI.ObjectField(position, "Value", paramGameObjProp  .objectReferenceValue, typeof(GameObject), true); break;
-                    default: EditorGUI.LabelField(position, "Unsupported value type: " + t); break;
-                }
+                case "int32":		paramIntProp	  .intValue				= EditorGUI.IntField(	position, "Value", paramIntProp	     .intValue		); break;
+                case "single":		paramFloatProp	  .floatValue			= EditorGUI.FloatField( position, "Value", paramFloatProp    .floatValue	); break;
+                case "string":		paramStringProp	  .stringValue		    = EditorGUI.TextField(  position, "Value", paramStringProp   .stringValue	); break;
+                case "boolean":		paramBoolProp	  .boolValue			= EditorGUI.Toggle(		position, "Value", paramBoolProp	 .boolValue		); break;
+                case "gameobject":	paramGameObjProp  .objectReferenceValue = EditorGUI.ObjectField(position, "Value", paramGameObjProp  .objectReferenceValue, typeof(GameObject), true); break;
+                default: EditorGUI.LabelField(position, "Unsupported value type: " + t); break;
             }
         }
 
-        private string GetDefaultValueJson(string paramType)
+        private void SelectMethod(GameObject obj, MethodInfo method)
         {
-			object instance = null;
-            Type t = Type.GetType(paramType);
-			switch (paramType.ToLower())
+            // Reset parameter
+            var paramsArr = method.GetParameters();
+            ResetParameter(paramsArr);
+
+            // Stop if 'None'-method
+            if (method == null)
             {
-                case "system.string":	instance = "";	  break;
-                case "int":		instance = 0;	  break;
-                case "float":	instance = 0;	  break;
-                case "bool":	instance = false; break;
-                default: instance = Activator.CreateInstance(t); break;
-			}
-            return EditorJsonUtility.ToJson(instance);
+                methodProp.stringValue = "None";
+                compProp.objectReferenceValue = null;
+                EditorGUI.EndProperty();
+                return;
+            }
+
+            // Figure out types
+            Component component = null;
+            var methodType = method.ReflectedType;
+            bool isObj = methodType == typeof(GameObject);
+            bool hasComp = !isObj && obj.TryGetComponent(methodType, out component);
+
+            // Assign method properties
+            compProp.objectReferenceValue = hasComp ? component : null;
+            methodProp.stringValue = method.Name;
+            isAsyncProp.boolValue = method.ReturnType == typeof(Task);
+        }
+        
+        private void ResetParameter(ParameterInfo[] paramInfos)
+        {
+            int paramCount = paramInfos == null ? 0 : paramInfos.Length;
+
+            paramIntProp.intValue = 0;
+            paramFloatProp.floatValue = 0f;
+            paramStringProp.stringValue = "";
+            paramBoolProp.boolValue = false;
+            paramComponentProp.objectReferenceValue = null;
+            paramGameObjProp.objectReferenceValue = null;
+            paramCountProp.intValue = paramCount;
+            paramTypeProp.stringValue = paramCount > 0 ? paramInfos[0].ParameterType.Name : "";
         }
 
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
-		{
-			return 36f;//HasParams() ? 36f : 18f;
-		}
-
-		private void GetMethods(GameObject obj)
-		{
-			methods = new List<MethodInfo>();
-			var comps = obj.GetComponents<Component>();
+        private List<MethodInfo> GetMethods(GameObject obj)
+        {
+            // Setup
+            methodComparer = methodComparer ?? new MethodComparer();
+            var methods = new List<MethodInfo>();
+            var comps = obj.GetComponents<Component>();
             var flags = BindingFlags.Public | BindingFlags.Instance;
-			
-			// attributes
-            var editorAttr = typeof(EditorBrowsableAttribute);
-            var serialAttr = typeof(SerializeField);
-            var obsoleAttr = typeof(ObsoleteAttribute);
 
             // Add all methods
             methods.AddRange(typeof(GameObject).GetMethods(flags));
             foreach (var comp in comps)
-				methods.AddRange(comp.GetType().GetMethods(flags));
+                methods.AddRange(comp.GetType().GetMethods(flags));
 
-			// Filter methods
-            methods = methods.Where(m => MethodFilter(m)).ToList();
-			methods = methods.OrderBy(m => m.Name, new CustomComparer()).ToList();
+            // Filter methods
+            methods = methods.Where(m => ShouldShowMethod(m)).ToList();
+            methods = methods.OrderBy(m => m.Name, methodComparer).ToList();
 
-			// Add 'None'
-			methods = methods.Prepend(null).ToList();
+            // Add 'None'
+            methods = methods.Prepend(null).ToList();
 
-			bool MethodFilter(MethodInfo m)
-			{
-				var parameters = m.GetParameters();
-                int paramLen = parameters.Length;
-				bool result = true;
-
-				// Method is void or task
-				result &= m.ReturnType == typeof(void) || m.ReturnType == typeof(Task);
-
-				if (m.Name.Contains("set_"))
-				{
-					var propInfo = m.DeclaringType.GetProperty(m.Name.Replace("set_", ""));
-					result &= !propInfo.HasAttribute(obsoleAttr);
-				}
-
-                // Method is public or serialized
-                result &= m.IsPublic || m.HasAttribute(serialAttr);
-
-				// Method is not obsolete
-				result &= !m.HasAttribute(obsoleAttr);
-
-				// Method either has no EditorBrowsable attribute or is Always browsable
-				result &= !m.HasAttribute(editorAttr) || m.GetCustomAttribute(editorAttr).Match(EditorBrowsableState.Always);
-
-				// Method has 0 or 1 parameters
-				result &= paramLen <= 1;
-
-				if (paramLen > 0 && m.Name.Contains("TestVoid6")) 
-				{
-				}
-
-				// If method has parameters, they should be of these types
-				result &= paramLen == 0 ? true :
-					parameters[0].ParameterType == typeof(string)	  ||
-					parameters[0].ParameterType == typeof(float)	  ||
-					parameters[0].ParameterType == typeof(int)		  ||
-					parameters[0].ParameterType == typeof(bool)		  ||
-					parameters[0].ParameterType == typeof(GameObject) ||
-                    parameters[0].ParameterType.IsSubclassOf(typeof(Component));
-
-				return result;
-			}	
-		}
+            // Return
+            return methods;
+        }
 
 		private string GetFormattedName(MethodInfo m)
 		{
@@ -298,10 +242,10 @@ namespace AsyncEvent
 
             switch (paramType.ToLower())
             {
-                case "int32": paramType = "int"; break;
-                case "boolean": paramType = "bool"; break;
-                case "string": paramType = "string"; break;
-                case "single": paramType = "float"; break;
+                case "int32"  : paramType = "int";    break;
+                case "boolean": paramType = "bool";   break;
+                case "string" : paramType = "string"; break;
+                case "single" : paramType = "float";  break;
             }
 
             if (newName.Contains("set_"))
@@ -312,41 +256,61 @@ namespace AsyncEvent
 			return newName;
 		}
 
-		private bool HasParams()
-		{
-			return methods[idx]?.GetParameters().Length > 0;
-		}
+        private bool ShouldShowMethod(MethodInfo m)
+        {
+            // Setup
+            var parameters = m.GetParameters();
+            int paramLen = parameters.Length;
+            bool result = true;
 
-		//private object ShowParamGUI(Rect position, object value)
-		//{
-  //          switch (value)
-		//	{
-  //              case int i:			value = EditorGUI.IntField(position, "Value", i); break;
-  //              case float f:		value = EditorGUI.FloatField(position, "Value", f); break;
-  //              case string s:		value = EditorGUI.TextField(position, "Value", s); break;
-  //              case bool b:		value = EditorGUI.Toggle(position, "Value", b); break;
-  //              case GameObject go: value = EditorGUI.ObjectField(position, "Value", go, typeof(GameObject), true); break;
-  //              case Component c:	value = EditorGUI.ObjectField(position, "Value", c, typeof(Component), true); break;
-  //              default: EditorGUI.LabelField(position, "Unsupported value type: " + value.GetType()); break;
-  //          }
+            // Attributes
+            var editorAttr = typeof(EditorBrowsableAttribute);
+            var serialAttr = typeof(SerializeField);
+            var obsoleAttr = typeof(ObsoleteAttribute);
 
-		//	if (value == "test")
-		//		Debug.Break();
+            // Method is void or task
+            result &= m.ReturnType == typeof(void) || m.ReturnType == typeof(Task);
 
-		//	return value;
-  //      }
-        
-        public class CustomComparer : IComparer<string>
+            // Check if property method
+            if (m.Name.Contains("set_"))
+            {
+                var propInfo = m.DeclaringType.GetProperty(m.Name.Replace("set_", ""));
+                result &= !propInfo.HasAttribute(obsoleAttr);
+            }
+
+            // Method is public or serialized
+            result &= m.IsPublic || m.HasAttribute(serialAttr);
+
+            // Method is not obsolete
+            result &= !m.HasAttribute(obsoleAttr);
+
+            // Method either has no EditorBrowsable attribute or is Always browsable
+            result &= !m.HasAttribute(editorAttr) || m.GetCustomAttribute(editorAttr).Match(EditorBrowsableState.Always);
+
+            // Method has 0 or 1 parameters
+            result &= paramLen <= 1;
+
+            // If method has parameters, they should be of these types
+            result &= paramLen == 0 ? true :
+                parameters[0].ParameterType == typeof(string) ||
+                parameters[0].ParameterType == typeof(float) ||
+                parameters[0].ParameterType == typeof(int) ||
+                parameters[0].ParameterType == typeof(bool) ||
+                parameters[0].ParameterType == typeof(GameObject) ||
+                parameters[0].ParameterType.IsSubclassOf(typeof(Component));
+
+            return result;
+        }
+
+        public class MethodComparer : IComparer<string>
         {
             public int Compare(string x, string y)
             {
-                if (x.StartsWith("set_") && !y.StartsWith("set_"))
-                    return -1;
-                else if (!x.StartsWith("set_") && y.StartsWith("set_"))
-                    return 1;
-                else
-                    return x.CompareTo(y);
+                     if ( x.StartsWith("set_") && !y.StartsWith("set_")) return -1;
+                else if (!x.StartsWith("set_") &&  y.StartsWith("set_")) return  1;
+                else return x.CompareTo(y);
             }
         }
+        #endregion
     }
 }
