@@ -18,6 +18,7 @@ namespace AsyncEvent.Editor
             // Properties
             var callsProp    = property.FindPropertyRelative("calls");
             var callTypeProp = property.FindPropertyRelative("type");
+            float width = position.width;
 
             // Initialize
             if (!initialized)
@@ -60,7 +61,9 @@ namespace AsyncEvent.Editor
             GUIStyle tipStyle = new GUIStyle();
             tipStyle.normal.textColor = Color.gray;
             tipStyle.alignment = TextAnchor.MiddleRight;
-            position.height = 20; position.y -= 1; position.width -= 105;
+            tipStyle.clipping = TextClipping.Clip;
+            position.y -= 1; position.x = 100;
+            position.height = 20; position.width = width-190;
             GUI.Label(position, tip, tipStyle);
 
             // End

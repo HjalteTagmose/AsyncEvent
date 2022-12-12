@@ -1478,7 +1478,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   demoEvent:
-    type: 0
+    type: 1
     calls:
     - obj: {fileID: 902894566}
       component: {fileID: 1013794235}
