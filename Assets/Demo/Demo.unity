@@ -1452,21 +1452,138 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   testEvent:
-    type: 0
+    type: 1
     calls:
+    - obj: {fileID: 1540793871}
+      component: {fileID: 1540793872}
+      method: TestVoidCOMP
+      isAsync: 0
+      paramCount: 1
+      param:
+        stringValue: 
+        floatValue: 0
+        boolValue: 0
+        intValue: 0
+        componentValue: {fileID: 1162919460}
+        gameObjValue: {fileID: 0}
+        typeValue: Demo
+    - obj: {fileID: 1540793871}
+      component: {fileID: 1540793872}
+      method: TestVoidCOMP
+      isAsync: 0
+      paramCount: 1
+      param:
+        stringValue: 
+        floatValue: 0
+        boolValue: 0
+        intValue: 0
+        componentValue: {fileID: 1540793872}
+        gameObjValue: {fileID: 0}
+        typeValue: Test
     - obj: {fileID: 1540793871}
       component: {fileID: 1540793872}
       method: TestVoid
       isAsync: 0
       paramCount: 1
       param:
-        stringValue: dsfdfgdf
+        stringValue: test p0oopopopoo
         floatValue: 0
         boolValue: 0
         intValue: 0
         componentValue: {fileID: 0}
         gameObjValue: {fileID: 0}
         typeValue: String
+    - obj: {fileID: 1540793871}
+      component: {fileID: 1540793872}
+      method: TestVoid2
+      isAsync: 0
+      paramCount: 1
+      param:
+        stringValue: test2
+        floatValue: 0
+        boolValue: 0
+        intValue: 0
+        componentValue: {fileID: 0}
+        gameObjValue: {fileID: 0}
+        typeValue: String
+    - obj: {fileID: 1540793871}
+      component: {fileID: 1540793872}
+      method: TestVoid3
+      isAsync: 0
+      paramCount: 1
+      param:
+        stringValue: 
+        floatValue: 0
+        boolValue: 0
+        intValue: 69
+        componentValue: {fileID: 0}
+        gameObjValue: {fileID: 0}
+        typeValue: Int32
+    - obj: {fileID: 1540793871}
+      component: {fileID: 1540793872}
+      method: TestTask
+      isAsync: 1
+      paramCount: 0
+      param:
+        stringValue: 
+        floatValue: 0
+        boolValue: 0
+        intValue: 0
+        componentValue: {fileID: 0}
+        gameObjValue: {fileID: 0}
+        typeValue: 
+    - obj: {fileID: 1540793871}
+      component: {fileID: 1540793872}
+      method: TestTask
+      isAsync: 1
+      paramCount: 1
+      param:
+        stringValue: 
+        floatValue: 22.7
+        boolValue: 0
+        intValue: 0
+        componentValue: {fileID: 0}
+        gameObjValue: {fileID: 0}
+        typeValue: Single
+    - obj: {fileID: 1540793871}
+      component: {fileID: 1540793872}
+      method: TestVoid4
+      isAsync: 0
+      paramCount: 1
+      param:
+        stringValue: 
+        floatValue: 6.9
+        boolValue: 0
+        intValue: 0
+        componentValue: {fileID: 0}
+        gameObjValue: {fileID: 0}
+        typeValue: Single
+    - obj: {fileID: 1540793871}
+      component: {fileID: 1540793872}
+      method: TestVoid5
+      isAsync: 0
+      paramCount: 1
+      param:
+        stringValue: 
+        floatValue: 0
+        boolValue: 0
+        intValue: 0
+        componentValue: {fileID: 918038643}
+        gameObjValue: {fileID: 0}
+        typeValue: Transform
+    - obj: {fileID: 1540793871}
+      component: {fileID: 1540793872}
+      method: TestVoid6
+      isAsync: 0
+      paramCount: 1
+      param:
+        stringValue: 
+        floatValue: 0
+        boolValue: 0
+        intValue: 0
+        componentValue: {fileID: 0}
+        gameObjValue: {fileID: 519420028}
+        typeValue: GameObject
   restartButton: {fileID: 916064331}
   tipText: {fileID: 2024790614}
   runText: {fileID: 1379654466}
@@ -1485,16 +1602,16 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1540793871}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: set_isStatic
-        m_Mode: 6
+      - m_Target: {fileID: 1540793872}
+        m_TargetAssemblyTypeName: Test, Assembly-CSharp
+        m_MethodName: TestVoid2
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: asdasd
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &1207125476
