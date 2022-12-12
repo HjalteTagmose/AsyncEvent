@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEditor;
 using UnityEditorInternal;
+using System.IdentityModel.Claims;
+using System.Linq;
+using System;
 
 namespace AsyncEvent.Editor
 {
@@ -35,9 +38,11 @@ namespace AsyncEvent.Editor
             list.drawElementCallback =
                 (Rect rect, int index, bool isActive, bool isFocused) =>
                 {
+                    rect.height += 20;
                     EditorGUIUtility.labelWidth = 1;
                     EditorGUI.PropertyField(rect, callsProp.GetArrayElementAtIndex(index));
                 };
+            list.elementHeightCallback = _ => 40f;
             list.DoList(position);
 
             // Dropdown

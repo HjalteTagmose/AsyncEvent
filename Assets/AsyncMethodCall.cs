@@ -29,8 +29,8 @@ namespace AsyncEvent
             if (paramCount > 0)
             {
                 var val = param.GetValue();
-                ps = new object[] { val };
-                ptypes = new Type[] { val.GetType() };
+                ps[0] = val;
+                ptypes[0] = val.GetType();
             }
 
             // Create method

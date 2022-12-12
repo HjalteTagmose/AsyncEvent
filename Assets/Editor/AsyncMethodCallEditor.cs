@@ -215,7 +215,7 @@ namespace AsyncEvent
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
 		{
-			return HasParams() ? 36f : 18f;
+			return 36f;//HasParams() ? 36f : 18f;
 		}
 
 		private void GetMethods(GameObject obj)
