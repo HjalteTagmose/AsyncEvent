@@ -23,9 +23,9 @@ namespace AsyncEvent
 
             // Create params
             object[] p = new object[0];
-            //int paramCount = methodInfo.GetParameters().Length;
-            //if (paramCount > 0)
-            //    p = new object[] { param };
+            int paramCount = methodInfo.GetParameters().Length;
+            if (paramCount > 0)
+                p = new object[] { param.GetValue() };
 
             Debug.Log("start invoke: " + method);
             if (method == "None") 
