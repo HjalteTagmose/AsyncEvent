@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEditor;
-using Unity.VisualScripting;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -275,17 +274,17 @@ namespace AsyncEvent.Editor
             if (m.Name.Contains("set_"))
             {
                 var propInfo = m.DeclaringType.GetProperty(m.Name.Replace("set_", ""));
-                result &= !propInfo.HasAttribute(obsoleAttr);
+                result &= !HasAttribute(propInfo, obsoleAttr);
             }
 
             // Method is public or serialized
-            result &= m.IsPublic || m.HasAttribute(serialAttr);
+            result &= m.IsPublic || HasAttribute(m, serialAttr);
 
             // Method is not obsolete
-            result &= !m.HasAttribute(obsoleAttr);
+            result &= !HasAttribute(m, obsoleAttr);
 
             // Method either has no EditorBrowsable attribute or is Always browsable
-            result &= !m.HasAttribute(editorAttr) || m.GetCustomAttribute(editorAttr).Match(EditorBrowsableState.Always);
+            result &= !HasAttribute(m, editorAttr) || m.GetCustomAttribute(editorAttr).Match(EditorBrowsableState.Always);
 
             // Method has 0 or 1 parameters
             result &= paramLen <= 1;
@@ -300,6 +299,16 @@ namespace AsyncEvent.Editor
                 parameters[0].ParameterType.IsSubclassOf(typeof(Component));
 
             return result;
+        }
+
+        private bool HasAttribute(MethodInfo m, Type attr)
+        {
+            return m.GetCustomAttributes().FirstOrDefault(x => x.GetType() == attr) != null;
+        }
+
+        private bool HasAttribute(PropertyInfo p, Type attr)
+        {
+            return p.GetCustomAttributes().FirstOrDefault(x => x.GetType() == attr) != null;
         }
 
         public class MethodComparer : IComparer<string>

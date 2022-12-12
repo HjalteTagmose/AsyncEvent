@@ -1,0 +1,16 @@
+{
+    "name": "AsyncEvent.Demo",
+    "rootNamespace": "",
+    "references": [
+        "GUID:df3cee3952305524dbe910ebd98410e6"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
