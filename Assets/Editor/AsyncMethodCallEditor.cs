@@ -74,25 +74,29 @@ namespace AsyncEvent
             {
                 Component component = null;
                 var selected = methods[idx];
-                int paramCount = paramCountProp.intValue = methods[idx].GetParameters().Length;
                 old = idx;
 
-                // reset all param props here
+				// Get param info
+                var paramsArr = methods[idx]?.GetParameters();
+                int paramCount = paramsArr == null ? 0 : paramsArr.Length;
+
+                // Reset all param props here
                 paramIntProp.intValue = 0;
-				paramFloatProp.floatValue = 0f;
-				paramStringProp.stringValue = "";
-				paramBoolProp.boolValue = false;
-				paramComponentProp.objectReferenceValue = null;
+                paramFloatProp.floatValue = 0f;
+                paramStringProp.stringValue = "";
+                paramBoolProp.boolValue = false;
+                paramComponentProp.objectReferenceValue = null;
                 paramGameObjProp.objectReferenceValue = null;
-				paramTypeProp.stringValue = paramCount > 0 ? methods[idx].GetParameters()[0].ParameterType.Name : "";
+                paramCountProp.intValue = paramCount;
+                paramTypeProp.stringValue = paramCount > 0 ? paramsArr[0].ParameterType.Name : "";
 
                 if (selected == null)
                 {
-					methodProp.stringValue = "None";
+                    methodProp.stringValue = "None";
                     compProp.objectReferenceValue = null;
                     EditorGUI.EndProperty();
-					return;
-				}
+                    return;
+                }
 
 				bool isObj   = selected.ReflectedType == typeof(GameObject);
 				bool hasComp = !isObj && objValue.TryGetComponent(selected.ReflectedType, out component);
@@ -310,7 +314,7 @@ namespace AsyncEvent
 
 		private bool HasParams()
 		{
-			return methods[idx].GetParameters().Length > 0;
+			return methods[idx]?.GetParameters().Length > 0;
 		}
 
 		//private object ShowParamGUI(Rect position, object value)

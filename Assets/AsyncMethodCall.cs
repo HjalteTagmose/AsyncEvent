@@ -17,6 +17,12 @@ namespace AsyncEvent
 
         public async Task Invoke()
         {
+            if (method == "None")
+            {
+                Debug.LogWarning("No method specified");
+                return;
+            }
+
             bool isObj = component == null;
             Type type = isObj ? typeof(GameObject) : component.GetType();
             MethodInfo methodInfo = type.GetMethod(method);
