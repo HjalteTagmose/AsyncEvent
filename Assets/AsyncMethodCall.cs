@@ -12,8 +12,7 @@ namespace AsyncEvent
         [SerializeField] private Component component;
         [SerializeField] private string method = "";
         [SerializeField] private bool isAsync;
-        [SerializeField] private string paramJson = "";
-        [SerializeField] private string paramType = "";
+        [SerializeField] private int paramCount;
         [SerializeField] private Parameter param;
 
         public async Task Invoke()

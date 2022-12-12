@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace AsyncEvent
@@ -6,18 +5,12 @@ namespace AsyncEvent
     [System.Serializable]
     public class Parameter
     {
-        [SerializeField] public string json = "";
-        [SerializeField] public string type = "";
-
-        public void SetValue(object value)
-        {
-            this.type = value.GetType().ToString();
-            this.json = JsonUtility.ToJson(value);
-        }
-
-        public object GetValue()
-        {
-            return JsonUtility.FromJson(json, Type.GetType(type));
-        }
+        [SerializeField] public string stringValue;
+        [SerializeField] public float floatValue;
+        [SerializeField] public bool boolValue;
+        [SerializeField] public int intValue;
+        [SerializeField] public Component componentValue;
+        [SerializeField] public GameObject gameObjValue;
+        [SerializeField] public string typeValue;
     }
 }

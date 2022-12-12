@@ -8,6 +8,7 @@ using System.ComponentModel;
 using Component = UnityEngine.Component;
 using Unity.VisualScripting;
 using System;
+using static PlasticPipe.PlasticProtocol.Messages.NegotiationCommand;
 
 namespace AsyncEvent
 {
@@ -20,16 +21,21 @@ namespace AsyncEvent
 		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 		{
 			// Properties
-			var objProp		  = property.FindPropertyRelative("obj");
-			var compProp	  = property.FindPropertyRelative("component");
-			var methodProp	  = property.FindPropertyRelative("method");
-            var isAsyncProp	  = property.FindPropertyRelative("isAsync");
-            var paramJsonProp = property.FindPropertyRelative("paramJson");
-            var paramTypeProp = property.FindPropertyRelative("paramType");
+			var objProp				= property.FindPropertyRelative("obj");
+			var compProp			= property.FindPropertyRelative("component");
+			var methodProp			= property.FindPropertyRelative("method");
+            var isAsyncProp			= property.FindPropertyRelative("isAsync");
+            var paramProp			= property.FindPropertyRelative("param");
+            var paramCountProp		= property.FindPropertyRelative("paramCount");
 
-			// Parameter tests
-            var paramProp = property.FindPropertyRelative("param");
-			var testJson = paramProp.FindPropertyRelative("json");
+            // Parameter types
+            var paramIntProp		= paramProp.FindPropertyRelative("intValue");
+			var paramFloatProp		= paramProp.FindPropertyRelative("floatValue");
+			var paramStringProp		= paramProp.FindPropertyRelative("stringValue");
+			var paramBoolProp		= paramProp.FindPropertyRelative("boolValue");
+			var paramGameObjProp	= paramProp.FindPropertyRelative("gameObjValue");
+            var paramComponentProp	= paramProp.FindPropertyRelative("componentValue");
+            var paramTypeProp		= paramProp.FindPropertyRelative("typeValue");
 
             // Label
             float width = position.width;
@@ -65,15 +71,22 @@ namespace AsyncEvent
 
             // If picked new option, update call
             if (idx != old)
-			{
-				paramTypeProp.stringValue = "";
-				paramJsonProp.stringValue = "";
-
-				Component component = null;
+            {
+                Component component = null;
                 var selected = methods[idx];
+                int paramCount = paramCountProp.intValue = methods[idx].GetParameters().Length;
                 old = idx;
 
-				if (selected == null)
+                // reset all param props here
+                paramIntProp.intValue = 0;
+				paramFloatProp.floatValue = 0f;
+				paramStringProp.stringValue = "";
+				paramBoolProp.boolValue = false;
+				paramComponentProp.objectReferenceValue = null;
+                paramGameObjProp.objectReferenceValue = null;
+				paramTypeProp.stringValue = paramCount > 0 ? methods[idx].GetParameters()[0].ParameterType.Name : "";
+
+                if (selected == null)
                 {
 					methodProp.stringValue = "None";
                     compProp.objectReferenceValue = null;
@@ -101,6 +114,11 @@ namespace AsyncEvent
 			// Params
 			if (HasParams())
 			{
+                position.y += 20;
+                Type pType = methods[idx].GetParameters()[0].ParameterType;
+				ShowParamGUI(position, pType);
+
+                /*
                 position.y += 20; //this doesnt extend size of actual item?
 				string paramType = methods[idx].GetParameters()[0].ParameterType.ToString();
 				if (paramTypeProp.stringValue != paramType)
@@ -120,6 +138,7 @@ namespace AsyncEvent
 					Debug.Break();
 
 				paramJsonProp.stringValue = EditorJsonUtility.ToJson(value);
+				*/
             }
 
             EditorGUI.EndProperty();
@@ -129,6 +148,17 @@ namespace AsyncEvent
 				for (int i = 1; i < methods.Count; i++)
 				{
 					var m = methods[i];
+					var pCount = m.GetParameters().Length;
+
+                    if (pCount > 0)
+					{
+						var param = m.GetParameters()[0];
+						if (param.ParameterType.Name != paramTypeProp.stringValue)
+							continue;
+					}
+					else if (paramCountProp.intValue != pCount)
+						continue;
+
 					if (m.Name == methodProp.stringValue)
 					{
                         bool isObj = m.ReflectedType == typeof(GameObject);
@@ -142,7 +172,27 @@ namespace AsyncEvent
 
 				return 0;
 			}
-		}
+
+            void ShowParamGUI(Rect position, Type type)
+            {
+				if (type.IsSubclassOf(typeof(Component)))
+				{
+					paramComponentProp.objectReferenceValue = EditorGUI.ObjectField(position, "Value", paramComponentProp.objectReferenceValue, type, true); 
+                    return;
+				}
+
+                string t = type.Name.ToLower();
+                switch (t)
+                {
+                    case "int32":		paramIntProp	  .intValue				= EditorGUI.IntField(	position, "Value", paramIntProp	     .intValue		); break;
+                    case "single":		paramFloatProp	  .floatValue			= EditorGUI.FloatField( position, "Value", paramFloatProp    .floatValue	); break;
+                    case "string":		paramStringProp	  .stringValue		    = EditorGUI.TextField(  position, "Value", paramStringProp   .stringValue	); break;
+                    case "boolean":		paramBoolProp	  .boolValue			= EditorGUI.Toggle(		position, "Value", paramBoolProp	 .boolValue		); break;
+                    case "gameobject":	paramGameObjProp  .objectReferenceValue = EditorGUI.ObjectField(position, "Value", paramGameObjProp  .objectReferenceValue, typeof(GameObject), true); break;
+                    default: EditorGUI.LabelField(position, "Unsupported value type: " + t); break;
+                }
+            }
+        }
 
         private string GetDefaultValueJson(string paramType)
         {
@@ -189,7 +239,8 @@ namespace AsyncEvent
 
 			bool MethodFilter(MethodInfo m)
 			{
-				int paramLen = m.GetParameters().Length;
+				var parameters = m.GetParameters();
+                int paramLen = parameters.Length;
 				bool result = true;
 
 				// Method is void or task
@@ -213,14 +264,18 @@ namespace AsyncEvent
 				// Method has 0 or 1 parameters
 				result &= paramLen <= 1;
 
+				if (paramLen > 0 && m.Name.Contains("TestVoid6")) 
+				{
+				}
+
 				// If method has parameters, they should be of these types
 				result &= paramLen == 0 ? true :
-					m.GetParameters()[0].ParameterType == typeof(string) ||
-					m.GetParameters()[0].ParameterType == typeof(float) ||
-					m.GetParameters()[0].ParameterType == typeof(int) ||
-					m.GetParameters()[0].ParameterType == typeof(bool) ||
-					m.GetParameters()[0].ParameterType.IsSubclassOf(typeof(Component)) ||
-					m.GetParameters()[0].ParameterType.IsSubclassOf(typeof(GameObject));
+					parameters[0].ParameterType == typeof(string)	  ||
+					parameters[0].ParameterType == typeof(float)	  ||
+					parameters[0].ParameterType == typeof(int)		  ||
+					parameters[0].ParameterType == typeof(bool)		  ||
+					parameters[0].ParameterType == typeof(GameObject) ||
+                    parameters[0].ParameterType.IsSubclassOf(typeof(Component));
 
 				return result;
 			}	
@@ -258,24 +313,24 @@ namespace AsyncEvent
 			return methods[idx].GetParameters().Length > 0;
 		}
 
-		private object ShowParamGUI(Rect position, object value)
-		{
-            switch (value)
-			{
-                case int i:			value = EditorGUI.IntField(position, "Value", i); break;
-                case float f:		value = EditorGUI.FloatField(position, "Value", f); break;
-                case string s:		value = EditorGUI.TextField(position, "Value", s); break;
-                case bool b:		value = EditorGUI.Toggle(position, "Value", b); break;
-                case GameObject go: value = EditorGUI.ObjectField(position, "Value", go, typeof(GameObject), true); break;
-                case Component c:	value = EditorGUI.ObjectField(position, "Value", c, typeof(Component), true); break;
-                default: EditorGUI.LabelField(position, "Unsupported value type: " + value.GetType()); break;
-            }
+		//private object ShowParamGUI(Rect position, object value)
+		//{
+  //          switch (value)
+		//	{
+  //              case int i:			value = EditorGUI.IntField(position, "Value", i); break;
+  //              case float f:		value = EditorGUI.FloatField(position, "Value", f); break;
+  //              case string s:		value = EditorGUI.TextField(position, "Value", s); break;
+  //              case bool b:		value = EditorGUI.Toggle(position, "Value", b); break;
+  //              case GameObject go: value = EditorGUI.ObjectField(position, "Value", go, typeof(GameObject), true); break;
+  //              case Component c:	value = EditorGUI.ObjectField(position, "Value", c, typeof(Component), true); break;
+  //              default: EditorGUI.LabelField(position, "Unsupported value type: " + value.GetType()); break;
+  //          }
 
-			if (value == "test")
-				Debug.Break();
+		//	if (value == "test")
+		//		Debug.Break();
 
-			return value;
-        }
+		//	return value;
+  //      }
         
         public class CustomComparer : IComparer<string>
         {

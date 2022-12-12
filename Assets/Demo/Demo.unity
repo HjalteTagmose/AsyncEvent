@@ -1455,11 +1455,18 @@ MonoBehaviour:
     type: 0
     calls:
     - obj: {fileID: 1540793871}
-      component: {fileID: 0}
-      method: SendMessageUpwards
+      component: {fileID: 1540793872}
+      method: TestVoid
       isAsync: 0
-      paramJson: '{}'
-      paramType: System.String
+      paramCount: 1
+      param:
+        stringValue: asd asd asd as d
+        floatValue: 0
+        boolValue: 0
+        intValue: 0
+        componentValue: {fileID: 0}
+        gameObjValue: {fileID: 0}
+        typeValue: String
   restartButton: {fileID: 916064331}
   tipText: {fileID: 2024790614}
   runText: {fileID: 1379654466}
@@ -1782,7 +1789,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baef1813e2d1581479536edaaa0c629b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  publicVar: dasd
 --- !u!4 &1540793873
 Transform:
   m_ObjectHideFlags: 0
