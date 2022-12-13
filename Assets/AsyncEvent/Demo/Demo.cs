@@ -7,7 +7,6 @@ namespace AsyncEvent.Demo
     public class Demo : MonoBehaviour
     {
         [SerializeField] private AsyncEvent demoEvent;
-        [SerializeField] private AsyncEvent myAsyncEvent;
         [SerializeField] private Button restartButton;
         [SerializeField] private Text tipText;
         [SerializeField] private Text runText;
