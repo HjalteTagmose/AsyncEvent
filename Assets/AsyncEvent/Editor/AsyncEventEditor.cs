@@ -28,7 +28,8 @@ namespace AsyncEvent.Editor
             }
 
             // Begin
-            EditorGUI.BeginProperty(position, label, property);
+            var gui = EditorGUI.BeginProperty(position, label, property);
+            var labelWidth = EditorStyles.label.CalcSize(label).x + 30;
 
             // List
             list.drawHeaderCallback = (Rect rect) =>
@@ -54,16 +55,17 @@ namespace AsyncEvent.Editor
             string tip = "NaN";
             switch ((AsyncEventType)callTypeProp.enumValueIndex)
             {
-                case AsyncEventType.WaitAll: tip = "Calls all at once. Continues when all finished."; break;
-                case AsyncEventType.Sequenced: tip = "Calls one after another. Continues when all finished."; break;
+                case AsyncEventType.WhenAll:     tip = "Calls all at once. Continues when all finished."; break;
+                case AsyncEventType.Sequence:    tip = "Calls one after another. Continues when all finished."; break;
                 case AsyncEventType.Synchronous: tip = "Calls all at once. Continues instantly."; break;
             }
             GUIStyle tipStyle = new GUIStyle();
             tipStyle.normal.textColor = Color.gray;
             tipStyle.alignment = TextAnchor.MiddleRight;
             tipStyle.clipping = TextClipping.Clip;
-            position.y -= 1; position.x = 100;
-            position.height = 20; position.width = width-190;
+            position.y -= 1; position.height = 20; 
+            position.width = width - labelWidth - 90;
+            position.x = labelWidth;
             GUI.Label(position, tip, tipStyle);
 
             // End

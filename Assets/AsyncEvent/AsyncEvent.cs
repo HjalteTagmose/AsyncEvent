@@ -21,13 +21,23 @@ namespace AsyncEvent
 		{
 			switch (Type)
 			{
-				case AsyncEventType.WaitAll:   await InvokeWhenAll();	break;
-				case AsyncEventType.Sequenced: await InvokeSequenced(); break;
+				case AsyncEventType.WhenAll:   await InvokeWhenAll();	break;
+				case AsyncEventType.Sequence:  await InvokeSequenced(); break;
 				case AsyncEventType.Synchronous:     InvokeSync();		break;
 			}
 		}
 
-		public async Task InvokeWhenAll()
+		public async Task Invoke(AsyncEventType type)
+		{
+			switch (type)
+			{
+				case AsyncEventType.WhenAll:   await InvokeWhenAll();	break;
+				case AsyncEventType.Sequence:  await InvokeSequenced(); break;
+				case AsyncEventType.Synchronous:     InvokeSync();		break;
+			}
+		}
+
+		private async Task InvokeWhenAll()
 		{
 			List<Task> tasks = new List<Task>();
 			
@@ -35,18 +45,18 @@ namespace AsyncEvent
 				tasks.Add(call.Invoke());
 
 			await Task.WhenAll(tasks);
-		}
+        }
 
-		public void InvokeSync()
+        private async Task InvokeSequenced()
+        {
+            foreach (var call in calls)
+                await call.Invoke();
+        }
+
+        private void InvokeSync()
 		{
 			foreach (var call in calls)
-				call.Invoke();
-		}
-
-		public async Task InvokeSequenced()
-		{
-			foreach (var call in calls)
-				await call.Invoke();
+				_ = call.Invoke();
 		}
 	}
 }

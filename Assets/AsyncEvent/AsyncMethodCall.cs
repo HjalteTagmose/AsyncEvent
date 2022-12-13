@@ -15,7 +15,7 @@ namespace AsyncEvent
         [SerializeField] private int paramCount;
         [SerializeField] private Parameter param;
         
-        private bool debugOn = true;
+        private bool debugOn = false;
 
         public async Task Invoke()
         {

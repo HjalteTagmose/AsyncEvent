@@ -11,7 +11,7 @@ namespace AsyncEvent.Demo
         private Slider progressBar;
         private Image fill;
 
-        void Awake()
+        private void Awake()
         {
             progressBar = GetComponentInChildren<Slider>();
             fill = progressBar.fillRect.GetComponent<Image>();
@@ -23,18 +23,24 @@ namespace AsyncEvent.Demo
             for (float t = 0; t < time; t += Time.deltaTime)
             {
                 float pct = t / time;
-                progressBar.value = pct;
+                SetPercentage(pct);
                 await Task.Yield();
             }
-
-            progressBar.value = 1;
-            fill.color = Color.green;
+            SetPercentage(1);
         }
 
         public void Reset()
         {
-            progressBar.value = 0;
-            fill.color = Color.red;
+            SetPercentage(0);
+        }
+
+        private void SetPercentage(float pct)
+        {
+            if (progressBar)
+            {
+                progressBar.value = pct;
+                fill.color = pct == 1 ? Color.green : Color.red;
+            }
         }
     }
 }

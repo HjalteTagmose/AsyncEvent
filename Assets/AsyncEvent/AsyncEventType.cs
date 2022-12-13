@@ -2,8 +2,8 @@ namespace AsyncEvent
 {
     public enum AsyncEventType
     {
-        WaitAll,
-        Sequenced,
+        WhenAll,
+        Sequence,
         Synchronous,
     }
 }

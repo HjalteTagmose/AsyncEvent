@@ -7,6 +7,7 @@ namespace AsyncEvent.Demo
     public class Demo : MonoBehaviour
     {
         [SerializeField] private AsyncEvent demoEvent;
+        [SerializeField] private AsyncEvent myAsyncEvent;
         [SerializeField] private Button restartButton;
         [SerializeField] private Text tipText;
         [SerializeField] private Text runText;
@@ -29,7 +30,7 @@ namespace AsyncEvent.Demo
             Camera.main.backgroundColor = runningColor;
 
             // Invoke the event!
-            await demoEvent?.Invoke();
+            await demoEvent?.Invoke(AsyncEventType.Sequence);
 
             // Finished
             runText.color = Color.green;
@@ -44,8 +45,8 @@ namespace AsyncEvent.Demo
 
             switch (demoEvent.Type)
             {
-                case AsyncEventType.WaitAll:     tipText.text = "Tasks will run simultaneously. The event finishes when all tasks are finished."; break;
-                case AsyncEventType.Sequenced:   tipText.text = "Tasks will run one after another. The event finishes when last task is finished."; break;
+                case AsyncEventType.WhenAll:     tipText.text = "Tasks will run simultaneously. The event finishes when all tasks are finished."; break;
+                case AsyncEventType.Sequence:    tipText.text = "Tasks will run one after another. The event finishes when last task is finished."; break;
                 case AsyncEventType.Synchronous: tipText.text = "Tasks will run simultaneously. The event finished immediately!"; break;
                 default: break;
             }
@@ -57,7 +58,7 @@ namespace AsyncEvent.Demo
             foreach (var task in tasks)
                 task.Reset();
 
-            RunDemo();
+            _ = RunDemo();
         }
     }
 }
