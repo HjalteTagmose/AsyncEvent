@@ -311,7 +311,7 @@ namespace AsyncEvent.Editor
             return p.GetCustomAttributes().FirstOrDefault(x => x.GetType() == attr) != null;
         }
 
-        public class MethodComparer : IComparer<string>
+        private class MethodComparer : IComparer<string>
         {
             public int Compare(string x, string y)
             {

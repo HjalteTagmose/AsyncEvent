@@ -42,8 +42,8 @@ namespace AsyncEvent.Editor
                     EditorGUIUtility.labelWidth = 1;
                     EditorGUI.PropertyField(rect, callsProp.GetArrayElementAtIndex(index));
                 };
-            list.onReorderCallback     = _ => AsyncMethodCallEditor.ClearDatas();
-            list.elementHeightCallback = _ => 40f;
+			list.onReorderCallback = _ => AsyncMethodCallEditor.ClearDatas();
+			list.elementHeightCallback = _ => 40f;
             list.DoList(position);
 
 			// Dropdown

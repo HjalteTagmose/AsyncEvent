@@ -402,17 +402,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2483738896335182634, guid: 8221075a28edb5140a2a82fe76f717b0, type: 3}
   m_PrefabInstance: {fileID: 23583231}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &462953721 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: -5226234196104779083, guid: 8221075a28edb5140a2a82fe76f717b0, type: 3}
-  m_PrefabInstance: {fileID: 23583231}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 462953720}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e0c32cfdacbd424587c8b7b6f65fdc2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &508094048
 GameObject:
   m_ObjectHideFlags: 0
@@ -700,6 +689,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 530903907}
   m_CullTransparentMesh: 1
+--- !u!1 &609077705 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2483738896335182634, guid: 8221075a28edb5140a2a82fe76f717b0, type: 3}
+  m_PrefabInstance: {fileID: 2483738896128302739}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &610848275
 GameObject:
   m_ObjectHideFlags: 0
@@ -1403,6 +1397,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1040890289}
   m_CullTransparentMesh: 1
+--- !u!1 &1075267381 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2483738896335182634, guid: 8221075a28edb5140a2a82fe76f717b0, type: 3}
+  m_PrefabInstance: {fileID: 1637664238}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1162919457
 GameObject:
   m_ObjectHideFlags: 0
@@ -1459,11 +1458,11 @@ MonoBehaviour:
   demoEvent:
     type: 0
     calls:
-    - obj: {fileID: 462953720}
-      component: {fileID: 0}
-      isAsync: 0
-      method: set_isStatic
-      paramCount: 1
+    - obj: {fileID: 609077705}
+      component: {fileID: 1637664240}
+      isAsync: 1
+      method: MyTask
+      paramCount: 0
       param:
         intValue: 0
         boolValue: 0
@@ -1471,12 +1470,12 @@ MonoBehaviour:
         stringValue: 
         componentValue: {fileID: 0}
         gameObjValue: {fileID: 0}
-        typeValue: Boolean
+        typeValue: 
     - obj: {fileID: 462953720}
-      component: {fileID: 462953721}
-      isAsync: 0
-      method: set_name
-      paramCount: 1
+      component: {fileID: 1637664240}
+      isAsync: 1
+      method: MyTask
+      paramCount: 0
       param:
         intValue: 0
         boolValue: 0
@@ -1484,12 +1483,12 @@ MonoBehaviour:
         stringValue: 
         componentValue: {fileID: 0}
         gameObjValue: {fileID: 0}
-        typeValue: String
-    - obj: {fileID: 462953720}
-      component: {fileID: 462953721}
-      isAsync: 0
-      method: set_name
-      paramCount: 1
+        typeValue: 
+    - obj: {fileID: 1075267381}
+      component: {fileID: 1637664240}
+      isAsync: 1
+      method: MyTask
+      paramCount: 0
       param:
         intValue: 0
         boolValue: 0
@@ -1497,7 +1496,7 @@ MonoBehaviour:
         stringValue: 
         componentValue: {fileID: 0}
         gameObjValue: {fileID: 0}
-        typeValue: String
+        typeValue: 
   restartButton: {fileID: 916064331}
   tipText: {fileID: 2024790614}
   runText: {fileID: 1379654466}
@@ -1926,6 +1925,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2483738896335182633, guid: 8221075a28edb5140a2a82fe76f717b0, type: 3}
   m_PrefabInstance: {fileID: 1637664238}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1637664240 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -5226234196104779083, guid: 8221075a28edb5140a2a82fe76f717b0, type: 3}
+  m_PrefabInstance: {fileID: 1637664238}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1075267381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e0c32cfdacbd424587c8b7b6f65fdc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1943845954
 GameObject:
   m_ObjectHideFlags: 0
