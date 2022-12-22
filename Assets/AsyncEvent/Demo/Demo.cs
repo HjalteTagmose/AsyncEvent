@@ -29,7 +29,7 @@ namespace AsyncEvent.Demo
             Camera.main.backgroundColor = runningColor;
 
             // Invoke the event!
-            await demoEvent?.Invoke(AsyncEventType.Sequence);
+            await demoEvent?.Invoke();
 
             // Finished
             runText.color = Color.green;
