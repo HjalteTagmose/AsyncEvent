@@ -22,6 +22,7 @@ namespace AsyncEvent.Editor
             public int index;
             public string[] options;
             public List<MethodInfo> methods;
+
 			public MethodInfo CurMethod => methods[index];
 
 			public static ViewData NewData = new ViewData()
@@ -156,6 +157,11 @@ namespace AsyncEvent.Editor
 			data.methods = GetMethods(obj);
 			data.options = GetOptions(data.methods);
 			data.index	 = GetIndex(data.methods);
+		}
+
+		public static void Added(string key)
+		{
+			propertyData[key] = ViewData.NewData;
 		}
 
 		public static void ClearDatas()

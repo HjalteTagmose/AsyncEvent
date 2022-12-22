@@ -42,6 +42,15 @@ namespace AsyncEvent.Editor
                     EditorGUIUtility.labelWidth = 1;
                     EditorGUI.PropertyField(rect, callsProp.GetArrayElementAtIndex(index));
                 };
+            list.onAddCallback = list =>
+                {
+                    callsProp.arraySize++;
+                    var newIndex = callsProp.arraySize - 1;
+                    var newElement = callsProp.GetArrayElementAtIndex(newIndex);
+                    newElement.FindPropertyRelative("obj").objectReferenceValue = null;
+					AsyncMethodCallEditor.Added(newElement.propertyPath);
+                    list.Select(newIndex);
+                };
 			list.onReorderCallback = _ => AsyncMethodCallEditor.ClearDatas();
 			list.elementHeightCallback = _ => 40f;
             list.DoList(position);
