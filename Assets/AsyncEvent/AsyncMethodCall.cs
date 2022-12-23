@@ -38,7 +38,9 @@ namespace AsyncEvent
 
             // Create method
             bool isObj = component == null;
-            object mObj = isObj ? obj : component;
+            object mObj;
+            if (isObj) mObj = obj;
+            else mObj = component;
             Type type = mObj.GetType();
             MethodInfo methodInfo = type.GetMethod(method, paramTypes);
 

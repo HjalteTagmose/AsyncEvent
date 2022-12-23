@@ -1,12 +1,12 @@
 using UnityEngine;
 using UnityEditor;
 using System;
-using System.Reflection;
-using System.Collections.Generic;
-using Component = UnityEngine.Component;
 using System.Linq;
+using System.Reflection;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Component = UnityEngine.Component;
 
 namespace AsyncEvent.Editor
 {
@@ -27,12 +27,12 @@ namespace AsyncEvent.Editor
 			public ViewData()
 			{
 				index   = 0;
-				methods = new() { null };
+				methods = new List<MethodInfo>() { null };
 				options = new[] { "None" };
 			}
 		}
 
-		private static Dictionary<string, ViewData> propertyData = new ();
+		private static Dictionary<string, ViewData> propertyData = new Dictionary<string, ViewData>();
 		#endregion
 
 		#region Properties
@@ -177,7 +177,7 @@ namespace AsyncEvent.Editor
 		{
 			// Null check
 			if (obj == null) 
-				return new () { null };
+				return new List<MethodInfo>() { null };
 
 			// Setup
 			var methods = new List<MethodInfo>();

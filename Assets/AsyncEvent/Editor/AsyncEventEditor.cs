@@ -1,9 +1,6 @@
 using UnityEngine;
 using UnityEditor;
 using UnityEditorInternal;
-using System.IdentityModel.Claims;
-using System.Linq;
-using System;
 
 namespace AsyncEvent.Editor
 {
