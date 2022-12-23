@@ -1397,11 +1397,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1040890289}
   m_CullTransparentMesh: 1
---- !u!1 &1075267381 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2483738896335182634, guid: 8221075a28edb5140a2a82fe76f717b0, type: 3}
-  m_PrefabInstance: {fileID: 1637664238}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1162919457
 GameObject:
   m_ObjectHideFlags: 0
@@ -1484,7 +1479,7 @@ MonoBehaviour:
         componentValue: {fileID: 0}
         gameObjValue: {fileID: 0}
         typeValue: 
-    - obj: {fileID: 1075267381}
+    - obj: {fileID: 1637664241}
       component: {fileID: 1637664240}
       isAsync: 1
       method: MyTask
@@ -1930,12 +1925,17 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: -5226234196104779083, guid: 8221075a28edb5140a2a82fe76f717b0, type: 3}
   m_PrefabInstance: {fileID: 1637664238}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1075267381}
+  m_GameObject: {fileID: 1637664241}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5e0c32cfdacbd424587c8b7b6f65fdc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1637664241 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2483738896335182634, guid: 8221075a28edb5140a2a82fe76f717b0, type: 3}
+  m_PrefabInstance: {fileID: 1637664238}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1943845954
 GameObject:
   m_ObjectHideFlags: 0

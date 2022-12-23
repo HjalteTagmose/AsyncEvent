@@ -7,7 +7,6 @@ using Component = UnityEngine.Component;
 using System.Linq;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using Unity.Plastic.Newtonsoft.Json.Linq;
 
 namespace AsyncEvent.Editor
 {
@@ -25,12 +24,12 @@ namespace AsyncEvent.Editor
 
 			public MethodInfo CurMethod => methods[index];
 
-			public static ViewData NewData = new ViewData()
+			public ViewData()
 			{
-				index = 0,
-				methods = new() { null },
-				options = new[] { "None" }
-			};
+				index   = 0;
+				methods = new() { null };
+				options = new[] { "None" };
+			}
 		}
 
 		private static Dictionary<string, ViewData> propertyData = new ();
@@ -140,16 +139,21 @@ namespace AsyncEvent.Editor
 
 		#region Get View Data
 		private ViewData GetViewData(string key)
-        {
-            ViewData data;
+		{
+			ViewData data;
+
             if (!propertyData.TryGetValue(key, out data))
-            { 
+			{
 				var obj = (GameObject)objProp.objectReferenceValue;
 				data = new ViewData();
-				UpdateViewData(data, obj);
+
+				if (obj != null)
+					UpdateViewData(data, obj);
+
                 propertyData.Add(key, data);
             }
-            return data;
+
+			return data;
 		} 
 
 		private void UpdateViewData(ViewData data, GameObject obj)
@@ -161,7 +165,7 @@ namespace AsyncEvent.Editor
 
 		public static void Added(string key)
 		{
-			propertyData[key] = ViewData.NewData;
+			propertyData[key] = new ViewData();
 		}
 
 		public static void ClearDatas()
