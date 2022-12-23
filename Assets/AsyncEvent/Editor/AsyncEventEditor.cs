@@ -42,11 +42,21 @@ namespace AsyncEvent.Editor
                     EditorGUIUtility.labelWidth = 1;
                     EditorGUI.PropertyField(rect, callsProp.GetArrayElementAtIndex(index));
                 };
-            list.elementHeightCallback = _ => 40f;
+            list.onAddCallback = list =>
+                {
+                    callsProp.arraySize++;
+                    var newIndex = callsProp.arraySize - 1;
+                    var newElement = callsProp.GetArrayElementAtIndex(newIndex);
+                    newElement.FindPropertyRelative("obj").objectReferenceValue = null;
+					AsyncMethodCallEditor.Added(newElement.propertyPath);
+                    list.Select(newIndex);
+                };
+			list.onReorderCallback = _ => AsyncMethodCallEditor.ClearDatas();
+			list.elementHeightCallback = _ => 40f;
             list.DoList(position);
 
-            // Dropdown
-            float w = position.width; float y = position.y;
+			// Dropdown
+			float w = position.width; float y = position.y;
             position.x += w - 101; position.y += 1;
             position.height = 20; position.width = 100;
             EditorGUI.PropertyField(position, callTypeProp, GUIContent.none);
