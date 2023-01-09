@@ -3,10 +3,11 @@ using UnityEditor;
 using System;
 using System.Linq;
 using System.Reflection;
-using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Component = UnityEngine.Component;
+using System.ComponentModel;
+using System.Diagnostics;
 
 namespace AsyncEvent.Editor
 {
@@ -17,16 +18,16 @@ namespace AsyncEvent.Editor
 
 		#region ViewData
 		private class ViewData
-        {
-            public int index;
-            public string[] options;
-            public List<MethodInfo> methods;
+		{
+			public int index;
+			public string[] options;
+			public List<MethodInfo> methods;
 
 			public MethodInfo CurMethod => methods[index];
 
 			public ViewData()
 			{
-				index   = 0;
+				index = 0;
 				methods = new List<MethodInfo>() { null };
 				options = new[] { "None" };
 			}
@@ -38,26 +39,26 @@ namespace AsyncEvent.Editor
 		#region Properties
 		// Properties
 		private SerializedProperty objProp;
-        private SerializedProperty compProp;
-        private SerializedProperty methodProp;
-        private SerializedProperty isAsyncProp;
-        private SerializedProperty paramProp;
-        private SerializedProperty paramCountProp;
-		
-        // Parameter types
-        private SerializedProperty paramIntProp;
-        private SerializedProperty paramFloatProp;
-        private SerializedProperty paramStringProp;
-        private SerializedProperty paramBoolProp;
-        private SerializedProperty paramGameObjProp;
-        private SerializedProperty paramComponentProp;
-        private SerializedProperty paramTypeProp;
-        #endregion
+		private SerializedProperty compProp;
+		private SerializedProperty methodProp;
+		private SerializedProperty isAsyncProp;
+		private SerializedProperty paramProp;
+		private SerializedProperty paramCountProp;
 
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
- 		{
+		// Parameter types
+		private SerializedProperty paramIntProp;
+		private SerializedProperty paramFloatProp;
+		private SerializedProperty paramStringProp;
+		private SerializedProperty paramBoolProp;
+		private SerializedProperty paramGameObjProp;
+		private SerializedProperty paramComponentProp;
+		private SerializedProperty paramTypeProp;
+		#endregion
+
+		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+		{
 			// Save rect
-	 		var orig = position;
+			var orig = position;
 
 			// Get all properties
 			GetProperties(property);
@@ -66,7 +67,7 @@ namespace AsyncEvent.Editor
 			// Get ViewData
 			var data = GetViewData(property.propertyPath);
 
-            // Label
+			// Label
 			label = EditorGUI.BeginProperty(position, label, property);
 			position = EditorGUI.PrefixLabel(position, label);
 
@@ -116,25 +117,25 @@ namespace AsyncEvent.Editor
 
 		#region Get Properties
 		private void GetProperties(SerializedProperty property)
-        {			
-			objProp				= property.FindPropertyRelative("obj");
-			compProp			= property.FindPropertyRelative("component");
-			methodProp			= property.FindPropertyRelative("method");
-            isAsyncProp			= property.FindPropertyRelative("isAsync");
-            paramProp			= property.FindPropertyRelative("param");
-            paramCountProp		= property.FindPropertyRelative("paramCount");
-        }
+		{
+			objProp = property.FindPropertyRelative("obj");
+			compProp = property.FindPropertyRelative("component");
+			methodProp = property.FindPropertyRelative("method");
+			isAsyncProp = property.FindPropertyRelative("isAsync");
+			paramProp = property.FindPropertyRelative("param");
+			paramCountProp = property.FindPropertyRelative("paramCount");
+		}
 
-        private void GetParamProperties(SerializedProperty property)
-        {
-            paramIntProp		= paramProp.FindPropertyRelative("intValue");
-			paramFloatProp		= paramProp.FindPropertyRelative("floatValue");
-			paramStringProp		= paramProp.FindPropertyRelative("stringValue");
-			paramBoolProp		= paramProp.FindPropertyRelative("boolValue");
-			paramGameObjProp	= paramProp.FindPropertyRelative("gameObjValue");
-            paramComponentProp	= paramProp.FindPropertyRelative("componentValue");
-            paramTypeProp		= paramProp.FindPropertyRelative("typeValue");
-        }
+		private void GetParamProperties(SerializedProperty property)
+		{
+			paramIntProp = paramProp.FindPropertyRelative("intValue");
+			paramFloatProp = paramProp.FindPropertyRelative("floatValue");
+			paramStringProp = paramProp.FindPropertyRelative("stringValue");
+			paramBoolProp = paramProp.FindPropertyRelative("boolValue");
+			paramGameObjProp = paramProp.FindPropertyRelative("gameObjValue");
+			paramComponentProp = paramProp.FindPropertyRelative("componentValue");
+			paramTypeProp = paramProp.FindPropertyRelative("typeValue");
+		}
 		#endregion
 
 		#region Get View Data
@@ -142,7 +143,7 @@ namespace AsyncEvent.Editor
 		{
 			ViewData data;
 
-            if (!propertyData.TryGetValue(key, out data))
+			if (!propertyData.TryGetValue(key, out data))
 			{
 				var obj = (GameObject)objProp.objectReferenceValue;
 				data = new ViewData();
@@ -150,17 +151,17 @@ namespace AsyncEvent.Editor
 				if (obj != null)
 					UpdateViewData(data, obj);
 
-                propertyData.Add(key, data);
-            }
+				propertyData.Add(key, data);
+			}
 
 			return data;
-		} 
+		}
 
 		private void UpdateViewData(ViewData data, GameObject obj)
 		{
 			data.methods = GetMethods(obj);
 			data.options = GetOptions(data.methods);
-			data.index	 = GetIndex(data.methods);
+			data.index = GetIndex(data.methods);
 		}
 
 		public static void Added(string key)
@@ -170,13 +171,13 @@ namespace AsyncEvent.Editor
 
 		public static void ClearDatas()
 		{
-            propertyData.Clear();
+			propertyData.Clear();
 		}
 
 		private List<MethodInfo> GetMethods(GameObject obj)
 		{
 			// Null check
-			if (obj == null) 
+			if (obj == null)
 				return new List<MethodInfo>() { null };
 
 			// Setup
@@ -217,8 +218,17 @@ namespace AsyncEvent.Editor
 				// Check if property method
 				if (m.Name.Contains("set_"))
 				{
-					var propInfo = m.DeclaringType.GetProperty(m.Name.Replace("set_", ""));
-					result &= !HasAttribute(propInfo, obsoleAttr);
+					try
+					{
+						string propName = m.Name.Replace(m.Name.Contains("m_") ? "set_m_" : "set_", "");
+						var propInfo = m.DeclaringType.GetProperty(propName);
+						result &= !HasAttribute(propInfo, obsoleAttr);
+					}
+					catch (AmbiguousMatchException)
+					{
+
+						Debug.LogWarning($"Ambiguous match on {m.Name}.");
+					}
 				}
 
 				// Method is public or serialized
@@ -313,24 +323,24 @@ namespace AsyncEvent.Editor
 
 		#region GUI
 		private void ShowParamGUI(Rect position, Type type)
-        {
+		{
 			if (type.IsSubclassOf(typeof(Component)))
 			{
-				paramComponentProp.objectReferenceValue = EditorGUI.ObjectField(position, "Value", paramComponentProp.objectReferenceValue, type, true); 
-                return;
+				paramComponentProp.objectReferenceValue = EditorGUI.ObjectField(position, "Value", paramComponentProp.objectReferenceValue, type, true);
+				return;
 			}
 
-            string t = type.Name.ToLower();
-            switch (t)
-            {
-                case "int32":		paramIntProp	.intValue			  = EditorGUI.IntField   (position, "Value", paramIntProp	 .intValue   ); break;
-                case "single":		paramFloatProp	.floatValue			  = EditorGUI.FloatField (position, "Value", paramFloatProp  .floatValue ); break;
-                case "string":		paramStringProp	.stringValue		  = EditorGUI.TextField  (position, "Value", paramStringProp .stringValue); break;
-                case "boolean":		paramBoolProp	.boolValue			  = EditorGUI.Toggle     (position, "Value", paramBoolProp   .boolValue  ); break;
-                case "gameobject":	paramGameObjProp.objectReferenceValue = EditorGUI.ObjectField(position, "Value", paramGameObjProp.objectReferenceValue, typeof(GameObject), true); break;
-                default: EditorGUI.LabelField(position, "Unsupported value type: " + t); break;
-            }
-        }
+			string t = type.Name.ToLower();
+			switch (t)
+			{
+				case "int32": paramIntProp.intValue = EditorGUI.IntField(position, "Value", paramIntProp.intValue); break;
+				case "single": paramFloatProp.floatValue = EditorGUI.FloatField(position, "Value", paramFloatProp.floatValue); break;
+				case "string": paramStringProp.stringValue = EditorGUI.TextField(position, "Value", paramStringProp.stringValue); break;
+				case "boolean": paramBoolProp.boolValue = EditorGUI.Toggle(position, "Value", paramBoolProp.boolValue); break;
+				case "gameobject": paramGameObjProp.objectReferenceValue = EditorGUI.ObjectField(position, "Value", paramGameObjProp.objectReferenceValue, typeof(GameObject), true); break;
+				default: EditorGUI.LabelField(position, "Unsupported value type: " + t); break;
+			}
+		}
 		#endregion
 
 		#region Helpers
