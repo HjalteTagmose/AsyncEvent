@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 2483738895246493530}
   - component: {fileID: 2483738895246493531}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -204,7 +204,7 @@ GameObject:
   - component: {fileID: 2483738895616193589}
   - component: {fileID: 2483738895616193588}
   m_Layer: 5
-  m_Name: Slider
+  m_Name: Progressbar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -370,7 +370,7 @@ GameObject:
   - component: {fileID: 2483738896335182633}
   - component: {fileID: -5226234196104779083}
   m_Layer: 5
-  m_Name: Task
+  m_Name: DemoTask
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

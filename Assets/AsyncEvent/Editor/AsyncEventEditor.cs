@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditorInternal;
 
-namespace AsyncEvent.Editor
+namespace AsyncEvents.Editor
 {
     [CustomPropertyDrawer(typeof(AsyncEvent))]
     public class AsyncEventEditor : PropertyDrawer

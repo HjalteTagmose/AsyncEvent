@@ -1,12 +1,10 @@
 using System.Threading.Tasks;
+using AsyncEvents;
 using UnityEngine;
-using AsyncEvent;
 
 public class Test : MonoBehaviour
 {
-    public AsyncEvent.AsyncEvent myEvent;
-
-    public async Task TestTask() { await Task.Delay(12500); print("test async task"); }
+	public async Task TestTask() { await Task.Delay(12500); print("test async task"); }
     public async Task TestTask(float sec) { await Task.Delay((int)(sec*1000)); print("test" + sec); }
     public async void TestAsyncVoid() { await Task.Delay(5500); print("test async void"); }
     public void TestVoid()              => print("void");

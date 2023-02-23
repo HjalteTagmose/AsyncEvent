@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Component = UnityEngine.Component;
 
-namespace AsyncEvent.Editor
+namespace AsyncEvents.Editor
 {
 	[CustomPropertyDrawer(typeof(AsyncMethodCall))]
 	public class AsyncMethodCallEditor : PropertyDrawer

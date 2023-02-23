@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace AsyncEvent
+namespace AsyncEvents
 {
     [Serializable]
     public class AsyncMethodCall

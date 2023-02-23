@@ -1514,19 +1514,6 @@ MonoBehaviour:
         componentValue: {fileID: 0}
         gameObjValue: {fileID: 0}
         typeValue: 
-    - obj: {fileID: 1540793871}
-      component: {fileID: 1540793872}
-      isAsync: 0
-      method: TestAsyncVoid
-      paramCount: 0
-      param:
-        intValue: 0
-        boolValue: 0
-        floatValue: 0
-        stringValue: 
-        componentValue: {fileID: 0}
-        gameObjValue: {fileID: 0}
-        typeValue: 
   restartButton: {fileID: 916064331}
   tipText: {fileID: 2024790614}
   runText: {fileID: 1379654466}
@@ -1793,66 +1780,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Press Play!
---- !u!1 &1540793871
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1540793873}
-  - component: {fileID: 1540793872}
-  m_Layer: 0
-  m_Name: test
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1540793872
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1540793871}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: baef1813e2d1581479536edaaa0c629b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  myEvent:
-    type: 0
-    calls:
-    - obj: {fileID: 1540793871}
-      component: {fileID: 1540793872}
-      isAsync: 0
-      method: TestAsyncVoid
-      paramCount: 0
-      param:
-        intValue: 0
-        boolValue: 0
-        floatValue: 0
-        stringValue: 
-        componentValue: {fileID: 0}
-        gameObjValue: {fileID: 0}
-        typeValue: 
---- !u!4 &1540793873
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1540793871}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 439.18805, y: 206.22963, z: -1.6631767}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1637664238
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace AsyncEvent
+namespace AsyncEvents
 {
     [System.Serializable]
     public class Parameter

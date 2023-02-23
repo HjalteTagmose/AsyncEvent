@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace AsyncEvent.Demo
+namespace AsyncEvents.Demo
 {
     public class DemoTask : MonoBehaviour
     {

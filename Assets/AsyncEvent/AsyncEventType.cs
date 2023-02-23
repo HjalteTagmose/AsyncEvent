@@ -1,4 +1,4 @@
-namespace AsyncEvent
+namespace AsyncEvents
 {
     public enum AsyncEventType
     {
