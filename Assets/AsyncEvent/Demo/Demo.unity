@@ -402,6 +402,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2483738896335182634, guid: 8221075a28edb5140a2a82fe76f717b0, type: 3}
   m_PrefabInstance: {fileID: 23583231}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &462953721 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -5226234196104779083, guid: 8221075a28edb5140a2a82fe76f717b0, type: 3}
+  m_PrefabInstance: {fileID: 23583231}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 462953720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e0c32cfdacbd424587c8b7b6f65fdc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &508094048
 GameObject:
   m_ObjectHideFlags: 0
@@ -1245,6 +1256,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2483738896335182633, guid: 8221075a28edb5140a2a82fe76f717b0, type: 3}
   m_PrefabInstance: {fileID: 2483738896128302739}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1013794235 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -5226234196104779083, guid: 8221075a28edb5140a2a82fe76f717b0, type: 3}
+  m_PrefabInstance: {fileID: 2483738896128302739}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 609077705}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e0c32cfdacbd424587c8b7b6f65fdc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1040890289
 GameObject:
   m_ObjectHideFlags: 0
@@ -1454,7 +1476,7 @@ MonoBehaviour:
     type: 0
     calls:
     - obj: {fileID: 609077705}
-      component: {fileID: 1637664240}
+      component: {fileID: 1013794235}
       isAsync: 1
       method: MyTask
       paramCount: 0
@@ -1467,7 +1489,7 @@ MonoBehaviour:
         gameObjValue: {fileID: 0}
         typeValue: 
     - obj: {fileID: 462953720}
-      component: {fileID: 1637664240}
+      component: {fileID: 462953721}
       isAsync: 1
       method: MyTask
       paramCount: 0
@@ -1483,6 +1505,19 @@ MonoBehaviour:
       component: {fileID: 1637664240}
       isAsync: 1
       method: MyTask
+      paramCount: 0
+      param:
+        intValue: 0
+        boolValue: 0
+        floatValue: 0
+        stringValue: 
+        componentValue: {fileID: 0}
+        gameObjValue: {fileID: 0}
+        typeValue: 
+    - obj: {fileID: 1540793871}
+      component: {fileID: 1540793872}
+      isAsync: 0
+      method: TestAsyncVoid
       paramCount: 0
       param:
         intValue: 0
@@ -1787,6 +1822,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baef1813e2d1581479536edaaa0c629b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  myEvent:
+    type: 0
+    calls:
+    - obj: {fileID: 1540793871}
+      component: {fileID: 1540793872}
+      isAsync: 0
+      method: TestAsyncVoid
+      paramCount: 0
+      param:
+        intValue: 0
+        boolValue: 0
+        floatValue: 0
+        stringValue: 
+        componentValue: {fileID: 0}
+        gameObjValue: {fileID: 0}
+        typeValue: 
 --- !u!4 &1540793873
 Transform:
   m_ObjectHideFlags: 0

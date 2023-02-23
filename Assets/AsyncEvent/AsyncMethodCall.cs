@@ -46,8 +46,8 @@ namespace AsyncEvent
 
             // Invoke it!
             if (debugOn) Debug.Log("start invoke: " + method);
-            dynamic awaitable = methodInfo.Invoke(mObj, paramObjs);
-            if (isAsync) await awaitable;
+            var awaitable = methodInfo.Invoke(mObj, paramObjs);
+            if (isAsync) await (awaitable as Task);
             if (debugOn) Debug.Log("end invoke: " + method);
         }
     }
