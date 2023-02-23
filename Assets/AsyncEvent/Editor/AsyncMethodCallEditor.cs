@@ -3,11 +3,10 @@ using UnityEditor;
 using System;
 using System.Linq;
 using System.Reflection;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Component = UnityEngine.Component;
-using System.ComponentModel;
-using System.Diagnostics;
 
 namespace AsyncEvent.Editor
 {
