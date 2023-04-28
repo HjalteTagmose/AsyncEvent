@@ -21,35 +21,46 @@ namespace AsyncEvents.Editor
             if (!initialized)
             {
                 this.list = new ReorderableList(property.serializedObject, callsProp, true, true, true, true);
-                initialized = true;
+
+				// List
+				list.drawHeaderCallback = (Rect rect) =>
+				{
+					EditorGUI.LabelField(rect, label);
+				};
+				list.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+				{
+					rect.height += 20;
+					EditorGUIUtility.labelWidth = 1;
+					EditorGUI.PropertyField(rect, callsProp.GetArrayElementAtIndex(index));
+				};
+				list.onAddCallback = list =>
+				{
+					callsProp.arraySize++;
+					var newIndex = callsProp.arraySize - 1;
+					var newElement = callsProp.GetArrayElementAtIndex(newIndex);
+					newElement.FindPropertyRelative("obj").objectReferenceValue = null;
+					AsyncMethodCallEditor.Added(newElement.propertyPath);
+					list.Select(newIndex);
+				};
+				list.onReorderCallback = _ =>
+				{
+					Debug.Log("reorder");
+					AsyncMethodCallEditor.ClearDatas();
+				};
+				list.onRemoveCallback = _ =>
+				{
+                    ReorderableList.defaultBehaviours.DoRemoveButton(list);
+					Debug.Log("rm");
+					AsyncMethodCallEditor.ClearDatas();
+				};
+				list.elementHeightCallback = _ => 40f;
+
+				initialized = true;
             }
 
             // Begin
             var gui = EditorGUI.BeginProperty(position, label, property);
             var labelWidth = EditorStyles.label.CalcSize(label).x + 30;
-
-            // List
-            list.drawHeaderCallback = (Rect rect) =>
-                {
-                    EditorGUI.LabelField(rect, label);
-                };
-            list.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
-                {
-                    rect.height += 20;
-                    EditorGUIUtility.labelWidth = 1;
-                    EditorGUI.PropertyField(rect, callsProp.GetArrayElementAtIndex(index));
-                };
-            list.onAddCallback = list =>
-                {
-                    callsProp.arraySize++;
-                    var newIndex = callsProp.arraySize - 1;
-                    var newElement = callsProp.GetArrayElementAtIndex(newIndex);
-                    newElement.FindPropertyRelative("obj").objectReferenceValue = null;
-					AsyncMethodCallEditor.Added(newElement.propertyPath);
-                    list.Select(newIndex);
-                };
-			list.onReorderCallback = _ => AsyncMethodCallEditor.ClearDatas();
-			list.elementHeightCallback = _ => 40f;
             list.DoList(position);
 
 			// Dropdown
