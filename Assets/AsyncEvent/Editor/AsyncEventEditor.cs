@@ -44,13 +44,11 @@ namespace AsyncEvents.Editor
 				};
 				list.onReorderCallback = _ =>
 				{
-					Debug.Log("reorder");
 					AsyncMethodCallEditor.ClearDatas();
 				};
 				list.onRemoveCallback = _ =>
 				{
                     ReorderableList.defaultBehaviours.DoRemoveButton(list);
-					Debug.Log("rm");
 					AsyncMethodCallEditor.ClearDatas();
 				};
 				list.elementHeightCallback = _ => 40f;

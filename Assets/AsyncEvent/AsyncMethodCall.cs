@@ -1,7 +1,10 @@
 using System;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace AsyncEvents
 {
@@ -17,7 +20,19 @@ namespace AsyncEvents
         
         private bool debugOn = false;
 
-        public async Task Invoke()
+        public AsyncMethodCall(Action action)
+		{
+            if (action.Target is GameObject) 
+                obj = action.Target as GameObject;
+            else 
+                component = action.Target as Component;
+
+			isAsync = action.Method.ReturnType.GetMethod(nameof(Task.GetAwaiter)) != null;
+            method = action.Method.Name;
+            paramCount = 0;
+		}
+
+		public async Task Invoke()
         {
             // If no method, do nothing
             if (method == "None")
@@ -44,8 +59,11 @@ namespace AsyncEvents
             Type type = mObj.GetType();
             MethodInfo methodInfo = type.GetMethod(method, paramTypes);
 
-            // Invoke it!
-            if (debugOn) Debug.Log("start invoke: " + method);
+			// Check if async
+			isAsync = methodInfo.ReturnType.GetMethod(nameof(Task.GetAwaiter)) != null;
+
+			// Invoke it!
+			if (debugOn) Debug.Log("start invoke: " + method);
 			if (debugOn && methodInfo == null) Debug.LogWarning("Async call doesn't have method");
 			var awaitable = methodInfo?.Invoke(mObj, paramObjs); 
             if (isAsync) await (awaitable as Task);

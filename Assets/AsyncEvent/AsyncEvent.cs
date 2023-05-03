@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -17,7 +18,16 @@ namespace AsyncEvents
 			set => type = value;
 		}
 
-        public async Task Invoke()
+		public void AddListener(Action action)
+		{
+			var call = new AsyncMethodCall(action);
+			var temp = new AsyncMethodCall[calls.Length + 1];
+			Array.Copy(calls, temp, calls.Length);
+			temp[calls.Length] = call;
+			calls = temp;
+		}
+
+		public async Task Invoke()
 		{
 			switch (Type)
 			{
