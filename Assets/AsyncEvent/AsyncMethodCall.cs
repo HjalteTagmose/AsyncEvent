@@ -46,7 +46,8 @@ namespace AsyncEvents
 
             // Invoke it!
             if (debugOn) Debug.Log("start invoke: " + method);
-            var awaitable = methodInfo.Invoke(mObj, paramObjs);
+			if (debugOn && methodInfo == null) Debug.LogWarning("Async call doesn't have method");
+			var awaitable = methodInfo?.Invoke(mObj, paramObjs); 
             if (isAsync) await (awaitable as Task);
             if (debugOn) Debug.Log("end invoke: " + method);
         }
