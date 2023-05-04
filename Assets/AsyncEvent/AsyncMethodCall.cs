@@ -16,9 +16,10 @@ namespace AsyncEvents
         [SerializeField] private bool isAsync;
         [SerializeField] private string method = "None";
         [SerializeField] private int paramCount;
-        [SerializeField] private Parameter param;
-        
-        private bool debugOn = false;
+		[SerializeField] private Parameter param;
+		[SerializeField] private bool isPersistent = true;
+
+		private bool debugOn = false;
 
         public AsyncMethodCall(Action action)
 		{
@@ -30,6 +31,7 @@ namespace AsyncEvents
 			isAsync = action.Method.ReturnType.GetMethod(nameof(Task.GetAwaiter)) != null;
             method = action.Method.Name;
             paramCount = 0;
+            isPersistent = false;
 		}
 
 		public async Task Invoke()

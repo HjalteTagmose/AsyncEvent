@@ -11,6 +11,7 @@ namespace AsyncEvents
 	{
 		[SerializeField] private AsyncEventType type;
 		[SerializeField] private AsyncMethodCall[] calls;
+		[SerializeField] private List<AsyncMethodCall> tempCalls;
 
 		public AsyncEventType Type 
 		{
@@ -21,10 +22,7 @@ namespace AsyncEvents
 		public void AddListener(Action action)
 		{
 			var call = new AsyncMethodCall(action);
-			var temp = new AsyncMethodCall[calls.Length + 1];
-			Array.Copy(calls, temp, calls.Length);
-			temp[calls.Length] = call;
-			calls = temp;
+			tempCalls.Add(call);
 		}
 
 		public async Task Invoke()
@@ -50,22 +48,28 @@ namespace AsyncEvents
 		private async Task InvokeWhenAll()
 		{
 			List<Task> tasks = new List<Task>();
-			
+
 			foreach (var call in calls)
+				tasks.Add(call.Invoke());
+			foreach (var call in tempCalls)
 				tasks.Add(call.Invoke());
 
 			await Task.WhenAll(tasks);
         }
 
         private async Task InvokeSequenced()
-        {
-            foreach (var call in calls)
-                await call.Invoke();
-        }
+		{
+			foreach (var call in calls)
+				await call.Invoke();
+			foreach (var call in tempCalls)
+				await call.Invoke();
+		}
 
         private void InvokeSync()
 		{
 			foreach (var call in calls)
+				_ = call.Invoke();
+			foreach (var call in tempCalls)
 				_ = call.Invoke();
 		}
 	}
