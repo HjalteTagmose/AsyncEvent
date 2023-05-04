@@ -22,6 +22,13 @@ namespace AsyncEvents.Editor
             {
                 this.list = new ReorderableList(property.serializedObject, callsProp, true, true, true, true);
 
+                // Make sure we reset on Undo
+                Undo.undoRedoPerformed -= Refresh;
+                Undo.undoRedoPerformed += Refresh;
+
+				// Reset for new asyncevent
+				AsyncMethodCallEditor.ClearDatas();
+
 				// List
 				list.drawHeaderCallback = (Rect rect) =>
 				{
@@ -44,17 +51,17 @@ namespace AsyncEvents.Editor
 				};
 				list.onReorderCallback = _ =>
 				{
-					AsyncMethodCallEditor.ClearDatas();
+                    Refresh();
 				};
 				list.onRemoveCallback = _ =>
 				{
                     ReorderableList.defaultBehaviours.DoRemoveButton(list);
-					AsyncMethodCallEditor.ClearDatas();
+					Refresh();
 				};
 				list.elementHeightCallback = _ => 40f;
 
 				initialized = true;
-            }
+			}
 
             // Begin
             var gui = EditorGUI.BeginProperty(position, label, property);
@@ -89,11 +96,16 @@ namespace AsyncEvents.Editor
                 property.serializedObject.ApplyModifiedProperties();
 
             EditorGUI.EndProperty();
-        }
 
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+			void Refresh()
+            {
+                AsyncMethodCallEditor.ClearDatas(); 
+            }
+		}
+
+		public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             return initialized ? list.GetHeight() : 40;
         }
-    }
+	}
 }
