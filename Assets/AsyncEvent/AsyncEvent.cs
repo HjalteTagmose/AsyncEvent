@@ -13,7 +13,7 @@ namespace AsyncEvents
 		[SerializeField] private AsyncMethodCall[] calls;
 		[SerializeField] private List<AsyncMethodCall> tempCalls;
 
-		public AsyncEventType Type 
+		public AsyncEventType Type
 		{
 			get => type;
 			set => type = value;
@@ -25,13 +25,20 @@ namespace AsyncEvents
 			tempCalls.Add(call);
 		}
 
+		public void RemoveListener(Action action)
+		{
+			var call = tempCalls.FirstOrDefault(c => c.HasAction(action));
+			if (call != null)
+				tempCalls.Remove(call);
+		}
+
 		public async Task Invoke()
 		{
 			switch (Type)
 			{
-				case AsyncEventType.WhenAll:   await InvokeWhenAll();	break;
-				case AsyncEventType.Sequence:  await InvokeSequenced(); break;
-				case AsyncEventType.Synchronous:     InvokeSync();		break;
+				case AsyncEventType.WhenAll: await InvokeWhenAll(); break;
+				case AsyncEventType.Sequence: await InvokeSequenced(); break;
+				case AsyncEventType.Synchronous: InvokeSync(); break;
 			}
 		}
 
@@ -39,9 +46,9 @@ namespace AsyncEvents
 		{
 			switch (type)
 			{
-				case AsyncEventType.WhenAll:   await InvokeWhenAll();	break;
-				case AsyncEventType.Sequence:  await InvokeSequenced(); break;
-				case AsyncEventType.Synchronous:     InvokeSync();		break;
+				case AsyncEventType.WhenAll: await InvokeWhenAll(); break;
+				case AsyncEventType.Sequence: await InvokeSequenced(); break;
+				case AsyncEventType.Synchronous: InvokeSync(); break;
 			}
 		}
 
@@ -51,26 +58,27 @@ namespace AsyncEvents
 
 			foreach (var call in calls)
 				tasks.Add(call.Invoke());
-			foreach (var call in tempCalls)
-				tasks.Add(call.Invoke());
 
 			await Task.WhenAll(tasks);
-        }
 
-        private async Task InvokeSequenced()
-		{
-			foreach (var call in calls)
-				await call.Invoke();
 			foreach (var call in tempCalls)
-				await call.Invoke();
+				call.InvokeAction();
 		}
 
-        private void InvokeSync()
+		private async Task InvokeSequenced()
+		{
+			foreach (var call in calls)
+				await call.Invoke();
+			foreach (var call in tempCalls)
+				call.InvokeAction();
+		}
+
+		private void InvokeSync()
 		{
 			foreach (var call in calls)
 				_ = call.Invoke();
 			foreach (var call in tempCalls)
-				_ = call.Invoke();
+				call.InvokeAction();
 		}
 	}
 }

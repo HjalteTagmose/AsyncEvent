@@ -10,6 +10,8 @@ public class Test : MonoBehaviour
 	{
 		evnt.AddListener(TestVoid);
 		evnt?.Invoke();
+		evnt.RemoveListener(TestVoid);
+		evnt?.Invoke();
 	}
 	public async Task TestTask() { await Task.Delay(12500); print("test async task"); }
     public async Task TestTask(float sec) { await Task.Delay((int)(sec*1000)); print("test" + sec); }
