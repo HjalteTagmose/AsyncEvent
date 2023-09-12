@@ -1,4 +1,4 @@
-If you æike this plugin, you can support me, by buying it on the Asset Store:
+If you like this plugin, please support me, by buying it on the Asset Store:
 https://assetstore.unity.com/packages/add-ons/asyncevent-241378
 
 # AsyncEvent
